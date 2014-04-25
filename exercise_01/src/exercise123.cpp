@@ -20,6 +20,7 @@
 #include <QGraphicsRectItem>
 
 #include <QDebug>
+#include <iostream>
 
 //
 // STL
@@ -69,7 +70,7 @@ float Exercise123::getGrayColor(float r, float g, float b)
     //////////////////////////////////////////////////
     float gray;
 
-    //TODO: Implement grayscale function
+    gray = 0.299 * r + 0.587 * g + 0.114 * b;
 
     return gray;
 }
@@ -82,7 +83,7 @@ QColor Exercise123::getInvertColor(float r, float g, float b)
     //////////////////////////////////////////////////
     QColor invert;
 
-    //TODO: Implement invert color function
+    invert.setRgb(255 - r, 255 - g, 255 - b);
 
     return invert;
 }
@@ -92,52 +93,44 @@ QColor Exercise123::getInvertColor(float r, float g, float b)
 //[ Filter functions                                      ]
 //[-------------------------------------------------------]
 
-QColor Exercise123::getSharpenColor(const QImage &image, int x, int y)
-{
-    //////////////////////////////////////////////////
-    // Aufgabe 2
-    //////////////////////////////////////////////////
+QColor Exercise123::getSharpenColor(const QImage &image, int x, int y) {
+		
+    float r = 0, g = 0,	b = 0;
 
-    QColor color = getPixel(image, x, y);
-    float r = 0;
-    float g = 0;
-    float b = 0;
-
-    ///	...	 ... ... ... ...
-    ///	...	|_1_|_2_|_3_|...
-    ///	...	|_4_|_5_|_6_|...	<- 3x3 filter components
-    ///	...	|_7_|_8_|_9_|...
-    ///	...	 ... ... ... ...
-
-    //////////////////////////////////////////////////////////////////////////
-    // TODO: Define filter kernel as Laplace-Operator
-    //////////////////////////////////////////////////////////////////////////
-
-    int kernel[] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-
-    //////////////////////////////////////////////////
-    // TODO: Aufgabe 2a
-    //////////////////////////////////////////////////
+    int kernel[] = {
+		1, 1, 1,
+		1, -8, 1,
+		1, 1, 1
+	};
+	
+	QColor originalPixel = getPixel(image, x, y);
 
     // Apply kernel
-    /*
-    for (int yy=-1; yy<=1; yy++) {
-        for (int xx=-1; xx<=1; xx++) {
-            QColor pixel = getPixel(...);
-            r += ...
-            g += ...
-            b += ...
+	for (int yy = -1; yy <= 1; yy++) {
+        for (int xx = -1; xx <= 1; xx++) {
+            
+			QColor pixel = getPixel(image, x + xx, y + yy);
+			
+			int kernelValue = kernel[(yy + 1) * 3 + (xx + 1)];
+			
+            r += pixel.red() * kernelValue;
+            g += pixel.green() * kernelValue;
+            b += pixel.blue() * kernelValue;
         }
     }
-    */
-
+	
+	r = (originalPixel.red() - r * 0.2) / 255;
+	g = (originalPixel.green() - g * 0.2) / 255;
+	b = (originalPixel.blue() - b * 0.2) / 255;
+	
     clampColor(r, g, b);
 
     return QColor(r * 255.0f, g * 255.0f, b * 255.0f);
 }
 
-QColor Exercise123::getGaussColor(const QImage &image, int x, int y)
-{
+
+QColor Exercise123::getGaussColor(const QImage &image, int x, int y) {
+	
     //////////////////////////////////////////////////
     // Aufgabe 2
     //////////////////////////////////////////////////

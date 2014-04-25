@@ -12,8 +12,8 @@
 
 using namespace Qt;
 
-QWidget* MainWindow::createMultiViewWidget(QList<Exercise123*> &listViews, Exercise123* orig)
-{
+QWidget* MainWindow::createMultiViewWidget(QList<Exercise123*> &listViews, Exercise123* orig) {
+	
     QGridLayout* layout = new QGridLayout;
     for(int i=0; i < listViews.size(); i++) {
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -41,9 +41,9 @@ QWidget* MainWindow::createMultiViewWidget(QList<Exercise123*> &listViews, Exerc
     return widget;
 }
 
-MainWindow::MainWindow(QWidget *parent, QFlag flags) :
-	QMainWindow(parent, flags)
-{
+
+MainWindow::MainWindow(QWidget *parent, QFlag flags) : QMainWindow(parent, flags) {
+	
     // Set window title
     setWindowTitle("3D Computergrafik I - SS2014 - Aufgabenblatt 1");
 
