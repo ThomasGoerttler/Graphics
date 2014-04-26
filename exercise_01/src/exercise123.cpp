@@ -33,8 +33,8 @@ using namespace Qt;
 //[ Helper functions                                      ]
 //[-------------------------------------------------------]
 // Get pixel at position
-QColor Exercise123::getPixel(const QImage &image, int x, int y)
-{
+QColor Exercise123::getPixel(const QImage &image, int x, int y) {
+	
     int width = image.width();
     int height = image.height();
 
@@ -46,6 +46,7 @@ QColor Exercise123::getPixel(const QImage &image, int x, int y)
 
 // clamp color components to [0.0, 1.0]
 void Exercise123::clampColor(float& r, float& g, float& b) {
+	
     if (r < 0)
         r = 0.0;
     else if (r > 1.0)
@@ -233,19 +234,71 @@ QColor Exercise123::getMeanColorDynamicSize(const QImage &image, int x, int y, i
 
 //getDitheringColor can work directly on image - use it
 QColor Exercise123::getDitheringColor(QImage &image, int x, int y) {
+
+    float newpixel, error, oldpixel;
+	QColor oldpxColor;
 	
-    //////////////////////////////////////////////////
-    // Aufgabe 3
-    //////////////////////////////////////////////////
+    int width = image.width();
+    int height = image.height();
 
-    float oldpixel, newpixel;
+    float kernel[] = {
+		0, 0, 0,
+		0, 0, 7,
+		3, 5, 1
+	};
 
-    //TODOD: dithering by floyd-steinberg
+	oldpxColor = getPixel(image, x, y);
+	oldpixel = Exercise123::getGrayColor(oldpxColor.red(), oldpxColor.green(), oldpxColor.blue()) / 255;
+	newpixel = round(oldpixel);
+	error = oldpixel - newpixel;
+	
+	//std::cout << "Error: " << error << '\n';
+
+    // Apply kernel
+	for (int yy = -1; yy <= 1; yy++) {
+        for (int xx = -1; xx <= 1; xx++) {
+			
+			float kernelValue = kernel[(yy + 1) * 3 + (xx + 1)];
+			
+			if(kernelValue > 0 &&
+				x + xx > 0 &&
+				x + xx < width - 1 &&
+				y + yy > 0 &&
+				y + yy < height - 1) {
+					
+				float pixel;
+				QColor pxColor, newAdjacentPixel;
+
+				pxColor = getPixel(image, x + xx, y + yy),
+				pixel = Exercise123::getGrayColor(pxColor.red(), pxColor.green(), pxColor.blue());
 
 
+				//std::cout << pixel << ", " << (kernelValue / 16) << ", " << error * 255 << '\n';
 
-    clampColor(newpixel,newpixel,newpixel);
-    return QColor(newpixel * 255.0f,newpixel * 255.0f,newpixel * 255.0f);
+				pixel = round(pixel + ((kernelValue / 16) * error * 255));
+				
+				//std::cout << pixel << '\n';
+				
+
+			    clampColor(pixel, pixel, pixel);
+
+				// std::cout << pxColor.red() << ", " << pxColor.green() << ", " << pxColor.blue() << '\t' << pixel << '\n';
+
+
+				pxColor.setRgb(pixel, pixel, pixel);
+
+				//std::cout << pxColor.red() << '\n' << '\n';
+
+				image.setPixel(x + xx, y + yy, pxColor.rgb());
+			}
+        }
+    }
+	
+
+
+    clampColor(newpixel, newpixel, newpixel);
+	
+    return QColor(newpixel * 255.0f, newpixel * 255.0f, newpixel * 255.0f);
 }
 
 
