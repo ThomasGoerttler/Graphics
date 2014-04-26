@@ -130,95 +130,110 @@ QColor Exercise123::getSharpenColor(const QImage &image, int x, int y) {
 
 
 QColor Exercise123::getGaussColor(const QImage &image, int x, int y) {
+
+    float r = 0, g = 0,	b = 0;
+
+	int kernel[] = {
+		1, 2, 1,
+		2, 4, 2,
+		1, 2, 1
+	};
 	
-    //////////////////////////////////////////////////
-    // Aufgabe 2
-    //////////////////////////////////////////////////
-
-    QColor color = getPixel(image, x, y);
-    float r = 0.0;
-    float g = 0.0;
-    float b = 0.0;
-
-    //////////////////////////////////////////////////////////////////////////
-    // TODO: Define filter kernel as Gauss-Operator
-    //////////////////////////////////////////////////////////////////////////
-
-    int kernel[] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-
     // Apply kernel
-
-    //////////////////////////////////////////////////
-    // TODO: Aufgabe 2b
-    //////////////////////////////////////////////////
-
-    clampColor(r, g, b);
-
-    return QColor(r * 255.0f, g * 255.0f, b * 255.0f);
-}
-
-QColor Exercise123::getSobelColor(const QImage &image, int x, int y)
-{
-    //////////////////////////////////////////////////
-    // Aufgabe 2
-    //////////////////////////////////////////////////
-
-    QColor color = getPixel(image, x, y);
-
-    //////////////////////////////////////////////////////////////////////////
-    // TODO: Define filter kernels as Sobel Operators for both directions
-    //////////////////////////////////////////////////////////////////////////
-    int kernelX[] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-    int kernelY[] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-
-    //////////////////////////////////////////////////
-    // TODO: Aufgabe 2c
-    //////////////////////////////////////////////////
-
-    // apply kernel, use grayColor()!
-
-    float c;
-    float dummy = 0.0;
-    clampColor(c, dummy, dummy);
-
-    return QColor(c * 255.0f, c * 255.0f, c * 255.0f);
-}
-
-QColor Exercise123::getMeanColorDynamicSize(const QImage &image, int x, int y, int kernelSize)
-{
-    //////////////////////////////////////////////////
-    // Aufgabe 2
-    //////////////////////////////////////////////////
-
-    QColor color = getPixel(image, x, y);
-    float r = 0.0;
-    float g = 0.0;
-    float b = 0.0;
-
-    //////////////////////////////////////////////////
-    // TODO: Aufgabe 2d
-    //////////////////////////////////////////////////
-
-    // Apply kernel
-    /*
-    float sum = 0.0;
-    for (int yy=-(int)kernelSize; yy<=(int)kernelSize; yy++) {
-        for (int xx=-(int)kernelSize; xx<=(int)kernelSize; xx++) {
-            //
+	for (int yy = -1; yy <= 1; yy++) {
+        for (int xx = -1; xx <= 1; xx++) {
+            
+			QColor pixel = getPixel(image, x + xx, y + yy);
+			
+			int kernelValue = kernel[(yy + 1) * 3 + (xx + 1)];
+			
+            r += pixel.red() * kernelValue;
+            g += pixel.green() * kernelValue;
+            b += pixel.blue() * kernelValue;
         }
     }
-    */
-
-    // TODO: normalize
-
+	
+	r = (r / 16) / 255;
+	g = (g / 16) / 255;
+	b = (b / 16) / 255;
+	
     clampColor(r, g, b);
 
     return QColor(r * 255.0f, g * 255.0f, b * 255.0f);
 }
 
+
+QColor Exercise123::getSobelColor(const QImage &image, int x, int y) {
+	
+	
+	float gray,
+		dummy = 0.0;
+
+    int kernelX[] = {
+		1, 0, -1,
+		2, 0, -2,
+		1, 0, -1
+	};
+		
+    int kernelY[] = {
+		1, 2, 1,
+		0, 0, 0,
+		-1, -2, -1
+	};
+
+    // Apply kernel
+	for (int yy = -1; yy <= 1; yy++) {
+        for (int xx = -1; xx <= 1; xx++) {
+			
+			int kernelValue;
+            
+			QColor pixel = getPixel(image, x + xx, y + yy);
+			
+			kernelValue = kernelX[(yy + 1) * 3 + (xx + 1)];
+		    gray += qGray(pixel.rgb()) * kernelValue;
+			
+			kernelValue = kernelY[(yy + 1) * 3 + (xx + 1)];
+		    gray += qGray(pixel.rgb()) * kernelValue;
+        }
+    }
+	
+	gray /= 255;
+
+    clampColor(gray, dummy, dummy);
+
+    return QColor(gray * 255.0f, gray * 255.0f, gray * 255.0f);
+}
+
+
+QColor Exercise123::getMeanColorDynamicSize(const QImage &image, int x, int y, int kernelSize) {
+    
+	float r = 0, g = 0,	b = 0;
+	
+    // Apply kernel
+	for (int yy = -(int)kernelSize; yy <= (int)kernelSize; yy++) {
+        for (int xx = -(int)kernelSize; xx <= (int)kernelSize; xx++) {
+			            
+			QColor pixel = getPixel(image, x + xx, y + yy);
+			
+            r += pixel.red();
+            g += pixel.green();
+            b += pixel.blue();
+        }
+    }
+	
+	r = (r / pow(kernelSize * 2 + 1, 2)) / 255;
+	g = (g / pow(kernelSize * 2 + 1, 2)) / 255;
+	b = (b / pow(kernelSize * 2 + 1, 2)) / 255;
+	
+    clampColor(r, g, b);
+
+    return QColor(r * 255.0f, g * 255.0f, b * 255.0f);
+}
+
+
 //getDitheringColor can work directly on image - use it
-QColor Exercise123::getDitheringColor(QImage &image, int x, int y)
-{
+QColor Exercise123::getDitheringColor(QImage &image, int x, int y) {
+	
     //////////////////////////////////////////////////
     // Aufgabe 3
     //////////////////////////////////////////////////
@@ -233,10 +248,9 @@ QColor Exercise123::getDitheringColor(QImage &image, int x, int y)
     return QColor(newpixel * 255.0f,newpixel * 255.0f,newpixel * 255.0f);
 }
 
-Exercise123::Exercise123(Filter_Type type, QWidget *parent) :
-    ImageView(parent),
-    m_type(type)
-{
+
+Exercise123::Exercise123(Filter_Type type, QWidget *parent) : ImageView(parent), m_type(type) {
+   
     // load image
     const QImage image("../image1.png");
     QImage filterImage(image);
