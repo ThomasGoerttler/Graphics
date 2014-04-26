@@ -235,7 +235,7 @@ QColor Exercise123::getMeanColorDynamicSize(const QImage &image, int x, int y, i
 //getDitheringColor can work directly on image - use it
 QColor Exercise123::getDitheringColor(QImage &image, int x, int y) {
 
-    float newpixel, error, oldpixel;
+    float newpixel, normalizedError, oldpixel;
 	QColor oldpxColor;
 	
     int width = image.width();
@@ -250,10 +250,8 @@ QColor Exercise123::getDitheringColor(QImage &image, int x, int y) {
 	oldpxColor = getPixel(image, x, y);
 	oldpixel = Exercise123::getGrayColor(oldpxColor.red(), oldpxColor.green(), oldpxColor.blue()) / 255;
 	newpixel = round(oldpixel);
-	error = oldpixel - newpixel;
+	normalizedError = oldpixel - newpixel;
 	
-	//std::cout << "Error: " << error << '\n';
-
     // Apply kernel
 	for (int yy = -1; yy <= 1; yy++) {
         for (int xx = -1; xx <= 1; xx++) {
@@ -270,31 +268,18 @@ QColor Exercise123::getDitheringColor(QImage &image, int x, int y) {
 				QColor pxColor, newAdjacentPixel;
 
 				pxColor = getPixel(image, x + xx, y + yy),
-				pixel = Exercise123::getGrayColor(pxColor.red(), pxColor.green(), pxColor.blue());
+				pixel = Exercise123::getGrayColor(pxColor.red(), pxColor.green(), pxColor.blue()) / 255;
 
-
-				//std::cout << pixel << ", " << (kernelValue / 16) << ", " << error * 255 << '\n';
-
-				pixel = round(pixel + ((kernelValue / 16) * error * 255));
-				
-				//std::cout << pixel << '\n';
-				
-
-			    clampColor(pixel, pixel, pixel);
-
-				// std::cout << pxColor.red() << ", " << pxColor.green() << ", " << pxColor.blue() << '\t' << pixel << '\n';
-
+				pixel += ((kernelValue / 16) * normalizedError);							
+				pixel = (pixel > 1) ? 1 : (pixel < 0) ? 0 : pixel * 255;
 
 				pxColor.setRgb(pixel, pixel, pixel);
-
-				//std::cout << pxColor.red() << '\n' << '\n';
 
 				image.setPixel(x + xx, y + yy, pxColor.rgb());
 			}
         }
     }
 	
-
 
     clampColor(newpixel, newpixel, newpixel);
 	
