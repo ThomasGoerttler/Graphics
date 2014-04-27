@@ -20,7 +20,7 @@
 #include <QGraphicsRectItem>
 #include <QTimer>
 #include <QPainter>
-
+#include <iostream>
 //
 // STL
 //
@@ -47,12 +47,12 @@ int computeIterations(float cx, float cy)
 
 	float x = 0, y = 0;
 
-    //////////////////////////////////////////////////////////////////////////
-    // TODO: copy from implemented computeIterations() at Exercise4a
-    //////////////////////////////////////////////////////////////////////////
-
-    // ...
-
+	while ( (x * x + y * y) <= maxAbsSquare && iterationCount <= maxIterations) {
+	    x = x * x - y * y + cx;
+		y = 2 * x * y + cy;
+		iterationCount++;
+	}
+   
 	return iterationCount;
 }
 
@@ -86,12 +86,10 @@ Exercise4b::Exercise4b(QWidget *parent) :
     // Render mandelbrot set (initially)
     renderMandelbrot();
 
-    //////////////////////////////////////////////////////////////////////////////
-    // TODO: 4(b) Create a QTimer here and connect it to the slot onTimer()
-    //            (in it, update m_currentLevel to count from 0 to 12 and back)
-    //////////////////////////////////////////////////////////////////////////////
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(onTimer()));
+    timer->start(500);
 
-    // ...
 }
 
 Exercise4b::~Exercise4b()
@@ -120,21 +118,46 @@ void Exercise4b::renderMandelbrot()
 */
 void Exercise4b::drawRecursive(QPainter &painter, int x, int y, int w, int h, int level)
 {
-    //////////////////////////////////////////////////////////////////////////
-    // TODO: Render Mandelbrot recursively for current level m_level
-    //////////////////////////////////////////////////////////////////////////
+    
+	if (level == 0) {
+		int width = 800, height = 600;
+		float cx, cy;
+	    QPoint origin(600, 300);
+	    float scaleX = 3.0f, scaleY = 3.0f;
+	    int iterationCount;
+		int middle_X = x + w/2;
+		int middle_Y = y + h/2;
+		cx = ((float)(middle_X - origin.x()) / width)  * scaleX; 
+		cy = ((float)(middle_Y - origin.y()) / height) * scaleY;
+        // Compute number of iterations
+        iterationCount = computeIterations(cx, cy);
+        // Get color
+        QColor color = chooseColor(iterationCount, maxIterations);
+		// Draw all Pixel
+	    for (int i=x; i<x+w; i++) {
+	    	for (int j=y; j<y+h; j++) {
+	            painter.setPen(color);
+	            painter.drawPoint(i, j);
+			}
+		}
+		
+	} else {
+		level--;
+		drawRecursive(painter, x, y, w/2, h/2, level);
+		drawRecursive(painter, x+w/2, y, w/2, h/2, level);
+		drawRecursive(painter, x, y+h/2, w/2, h/2, level);
+		drawRecursive(painter, x+w/2, y+h/2, w/2, h/2, level);
+	}
+   	
 
-    // ...
 }
 
 void Exercise4b::onTimer()
 {
-    //////////////////////////////////////////////////////////////////////////
-    // TODO: count level from 0 to 12 and back (ping-pong loop)
-    //////////////////////////////////////////////////////////////////////////
+    if (m_currentLevel == 12)
+		m_currentLevel = 0;
+	else
+		m_currentLevel++;
 
-    // ...
-
-    // Render mandelbrot with current level
     renderMandelbrot();
 }

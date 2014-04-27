@@ -40,12 +40,12 @@ int computeIterations(float cx, float cy)
 
 	float x = 0, y = 0;
 
-    //////////////////////////////////////////////////////////////////////////
-    // TODO: Compute number of iterations, stored in the variable iterationsCount
-    //////////////////////////////////////////////////////////////////////////
-
-    // ...
-
+	while ( (x * x + y * y) <= maxAbsSquare && iterationCount <= maxIterations) {
+	    x = x * x - y * y + cx;
+		y = 2 * x * y + cy;
+		iterationCount++;
+	}
+   
 	return iterationCount;
 }
 
@@ -100,7 +100,7 @@ void Exercise4a::renderMandelbrot()
     QPainter painter(&mandelbrot);
 
     float cx, cy;
-    QPoint origin(600, 250);
+    QPoint origin(600, 300);
     float scaleX = 3.0f, scaleY = 3.0f;
     int iterationCount;
 
