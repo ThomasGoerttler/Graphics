@@ -27,25 +27,27 @@ using namespace Qt;
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
 const float maxAbsSquare = 4.0f;
-const int maxIterations  = 100;
+const int maxIterations  = 1000;
 
 
 //[-------------------------------------------------------]
 //[ Helper functions                                      ]
 //[-------------------------------------------------------]
-int computeIterations(float cx, float cy)
-{
-    float absSquare = 0;
+int computeIterations(float cx, float cy) {
+	
 	int iterationCount = 0;
+    float absSquare = 0,
+		xtemp,
+		x = 0,
+		y = 0;
 
-	float x = 0, y = 0;
-
-	while ( (x * x + y * y) <= maxAbsSquare && iterationCount <= maxIterations) {
-	    x = x * x - y * y + cx;
-		y = 2 * x * y + cy;
+	while (x*x + y*y < maxAbsSquare && iterationCount < maxIterations) {
+		xtemp = x*x - y*y + cx;
+		y = 2*x*y + cy;
+		x = xtemp;
 		iterationCount++;
 	}
-   
+
 	return iterationCount;
 }
 

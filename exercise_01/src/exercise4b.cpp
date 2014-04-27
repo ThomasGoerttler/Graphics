@@ -40,19 +40,21 @@ const int maxIterations  = 100;
 //[-------------------------------------------------------]
 namespace exercise4b {
 
-int computeIterations(float cx, float cy)
-{
-    float absSquare = 0;
+int computeIterations(float cx, float cy) {
+	
 	int iterationCount = 0;
+    float absSquare = 0,
+		xtemp,
+		x = 0,
+		y = 0;
 
-	float x = 0, y = 0;
-
-	while ( (x * x + y * y) <= maxAbsSquare && iterationCount <= maxIterations) {
-	    x = x * x - y * y + cx;
-		y = 2 * x * y + cy;
+	while (x*x + y*y < maxAbsSquare && iterationCount < maxIterations) {
+		xtemp = x*x - y*y + cx;
+		y = 2*x*y + cy;
+		x = xtemp;
 		iterationCount++;
 	}
-   
+
 	return iterationCount;
 }
 
@@ -81,15 +83,14 @@ using namespace exercise4b;
 Exercise4b::Exercise4b(QWidget *parent) :
     ImageView(parent),
     m_currentLevel(0),
-    m_currentDir(1)
-{
+    m_currentDir(1) {
+		
     // Render mandelbrot set (initially)
     renderMandelbrot();
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(onTimer()));
     timer->start(500);
-
 }
 
 Exercise4b::~Exercise4b()
@@ -116,8 +117,7 @@ void Exercise4b::renderMandelbrot()
 *  @brief
 *    Draw function recursively by using a quadtree-method
 */
-void Exercise4b::drawRecursive(QPainter &painter, int x, int y, int w, int h, int level)
-{
+void Exercise4b::drawRecursive(QPainter &painter, int x, int y, int w, int h, int level) {
     
 	if (level == 0) {
 		int width = 800, height = 600;
@@ -134,8 +134,8 @@ void Exercise4b::drawRecursive(QPainter &painter, int x, int y, int w, int h, in
         // Get color
         QColor color = chooseColor(iterationCount, maxIterations);
 		// Draw all Pixel
-	    for (int i=x; i<x+w; i++) {
-	    	for (int j=y; j<y+h; j++) {
+	    for (int i=x; i<=x+w; i++) {
+	    	for (int j=y; j<=y+h; j++) {
 	            painter.setPen(color);
 	            painter.drawPoint(i, j);
 			}
@@ -143,10 +143,11 @@ void Exercise4b::drawRecursive(QPainter &painter, int x, int y, int w, int h, in
 		
 	} else {
 		level--;
-		drawRecursive(painter, x, y, w/2, h/2, level);
-		drawRecursive(painter, x+w/2, y, w/2, h/2, level);
-		drawRecursive(painter, x, y+h/2, w/2, h/2, level);
-		drawRecursive(painter, x+w/2, y+h/2, w/2, h/2, level);
+		// Draw quadrants
+		drawRecursive(painter, x, y, w/2, h/2, level); // Northwest
+		drawRecursive(painter, x+w/2 + 1, y, w/2, h/2, level); // Northeast
+		drawRecursive(painter, x, y+h/2 + 1, w/2, h/2, level); // Soutwest
+		drawRecursive(painter, x+w/2 + 1, y+h/2 + 1, w/2, h/2, level); // Southeast
 	}
    	
 
@@ -154,7 +155,7 @@ void Exercise4b::drawRecursive(QPainter &painter, int x, int y, int w, int h, in
 
 void Exercise4b::onTimer()
 {
-    if (m_currentLevel == 12)
+    if (m_currentLevel > 8) // Should be 12 but performance is to bad then
 		m_currentLevel = 0;
 	else
 		m_currentLevel++;
