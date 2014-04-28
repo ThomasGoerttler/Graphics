@@ -97,16 +97,12 @@ QColor Exercise123::getInvertColor(float r, float g, float b)
 QColor Exercise123::getSharpenColor(const QImage &image, int x, int y) {
 		
     float r = 0, g = 0,	b = 0;
-
+		
     int kernel[] = {
-		1, 1, 1,
-		1, -8, 1,
-		1, 1, 1
+		-1, -1, -1,
+		-1, 9, -1,
+		-1, -1, -1
 	};
-	
-	QColor originalPixel = getPixel(image, x, y);
-
-    // Apply kernel
 	for (int yy = -1; yy <= 1; yy++) {
         for (int xx = -1; xx <= 1; xx++) {
             
@@ -119,10 +115,9 @@ QColor Exercise123::getSharpenColor(const QImage &image, int x, int y) {
             b += pixel.blue() * kernelValue;
         }
     }
-	
-	r = (originalPixel.red() - r * 0.2) / 255;
-	g = (originalPixel.green() - g * 0.2) / 255;
-	b = (originalPixel.blue() - b * 0.2) / 255;
+	r /= 255;
+	g /= 255;
+	b /= 255;
 	
     clampColor(r, g, b);
 
@@ -167,7 +162,7 @@ QColor Exercise123::getGaussColor(const QImage &image, int x, int y) {
 QColor Exercise123::getSobelColor(const QImage &image, int x, int y) {
 	
 	
-	float gray,
+	float gray1, gray2,
 		dummy = 0.0;
 
     int kernelX[] = {
@@ -191,18 +186,19 @@ QColor Exercise123::getSobelColor(const QImage &image, int x, int y) {
 			QColor pixel = getPixel(image, x + xx, y + yy);
 			
 			kernelValue = kernelX[(yy + 1) * 3 + (xx + 1)];
-		    gray += qGray(pixel.rgb()) * kernelValue;
+		    gray1 += qGray(pixel.rgb()) * kernelValue;
 			
 			kernelValue = kernelY[(yy + 1) * 3 + (xx + 1)];
-		    gray += qGray(pixel.rgb()) * kernelValue;
+		    gray2 += qGray(pixel.rgb()) * kernelValue;
         }
     }
 	
-	gray /= 255;
+	float grayAll = abs(gray1) + abs(gray2);
+	grayAll /= 255;
 
-    clampColor(gray, dummy, dummy);
+    clampColor(grayAll, dummy, dummy);
 
-    return QColor(gray * 255.0f, gray * 255.0f, gray * 255.0f);
+    return QColor(grayAll * 255.0f, grayAll * 255.0f, grayAll * 255.0f);
 }
 
 
