@@ -64,6 +64,35 @@ norm´( ((3),(4),(5)) ) =  1 / |((3),(4),(5))| * ((3),(4),(5)) = 1/(5 sqrt(2))  
 ###d
 ´det(G)=det( ((6,5),(1,8)) ) = 6 \*8 - 5 * 1 = 43´
 
+´det(H)=det( ((2,3,5),(-1,4,2),(3,-2,2)) ) 
+= 3 det( ((1,3),(-2,-5)) ) - 2 det( ((1,3),(-3,-5)) + 6 det( ((1,1),(-3,-2)) ) ´ 
+´= 3 \* (-5+6) - 2 \* (-5+9) + 6 \* (-2+3) = 3 \* 1 - 2 \*  4 - 6 \* 1 = 3-8+6 = 1´
 
+´det(J) = det( ((2,-3,1,4),(1,3,-2,2),(3,2,3,-3),(4,1,2,2)) )´
+´= 2 det( ((3,-2,2),(2,3,-3),(1,2,2)) ) - det( ((-3,1,4),(2,3,-3),(1,2,2)) ) + 3 det( ((-3,1,4),(3,-2,2),(1,2,2)) ) - 4 det( ((-3,1,4),(3,-2,2),(2,3,-3)) )´
+´= 2 \* 52 - (-39) + 3 \* 52 - 4 \* 65 = 39
+
+###e
+
+| K        | E        |  |
+| :-------------: |:-------------:| :-----|
+| ´((2,3),(-1,4))´ | ´((1,0),(0,1))´ | Zeilen vertauschen und dann zweite Zeile mal -1 |
+| ´((1,-4),(2,3))´ | ´((0,-1),(1,0))´ | erste Zeile mal -2; die Addition als neue zweite Zeile | 
+| ´((1,-4),(0,11))´ | ´((0,-1),(1,2))´ | zweite Zeile durch 11 |
+| ´((1,-4),(0,1))´ | ´((0,-1),(1/11,2/11))´ | die erste Zeile mal 4; die Additon als neue erste Zeile
+| ´((1,0),(0,1))´ | ´((4/11,-1/11),(1/11,2/11))´ | die Matrix die nun bei E steht ist die inverse Matrix von K |
+´K^-1 = ((4/11,-1/11),(1/11,2/11))´
+
+| L        | E        |  |
+| :-------------: |:-------------:| :-----|
+| ´((3,2,6),(1,1,3),(-3,-2,-5))´ | ´((1,0,0),(0,1,0),(0,0,1))´ | Zeilen 1 und 2 vertauschen |
+| ´((1,1,3),(3,2,6),(-3,-2,-5))´ | ´((0,1,0),(1,0,0),(0,0,1))´ | Zeilen 1 (mal -2) und 2 werden addiert und die neue zweite Zeile; Zeilen 1 ( mal 2 ) und 2 werden addiert und die neue dritte Zeile; |
+ |´((1,1,3),(0,-1,-3),(0,1,4))´ | ´((0,1,0),(1,-3,0),(0,3,1))´ | Zeilen 2 mal -1; Zeilen 2 und 3 werden addiert und die neue dritte Zeile; |
+ |´((1,1,3),(0,1,3),(0,0,1))´ | ´((0,1,0),(-1,3,0),(1,0,1))´ | Zeilen 1 und 2 (mal -1) werden addiert und die neue erste Zeile; Zeilen 2 und 3 (mal -3) werden addiert und die neue dritte Zeile; |
+ | ´((1,0,0),(0,1,0),(0,0,1))´ | ´((1,-2,0),(-4,3,-3),(1,0,1))´ | die Matrix die nun bei E steht ist die inverse Matrix von L |
+´L^-1 = ((1,-2,0),(-4,3,-3),(1,0,1))´
+
+
+// todo
 
 
