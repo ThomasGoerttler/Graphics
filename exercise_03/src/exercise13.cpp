@@ -1,0 +1,357 @@
+// ======================================
+// 3D Computergrafik
+// moodle.hpi3d.de
+// ======================================
+//
+// Sommersemester 2014 - Aufgabenblatt 3
+//                     - Aufgabe 13
+//
+// Diese Datei bearbeiten.
+//
+// Bearbeiter
+// Matr.-Nr: xxxxx
+// Matr.-Nr: xxxxx
+//
+// ======================================
+
+//
+// Qt
+//
+#include <QMatrix4x4>
+#include <QKeyEvent>
+#include <QRectF>
+#include <QSettings>
+
+#include "exercise13.h"
+#include "polygonaldrawable.h"
+#include "objio.h"
+#include "mathmacros.h"
+
+#include <math.h>
+
+//[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+namespace
+{
+    const QString settingsGroup("SlerpRotation");
+}
+
+//[-------------------------------------------------------]
+//[ Helper functions                                      ]
+//[-------------------------------------------------------]
+
+Exercise13::Exercise13(QWidget * parent)
+:   AbstractGLExercise(parent),
+    m_drawable(NULL),
+    m_mesh(-1),
+    m_base(-1)
+{
+    // setup angles and view
+    m_angles0[0] = 0.0f;
+    m_angles0[1] = 0.0f;
+    m_angles0[2] = 0.0f;
+
+    m_angles1[0] = 0.0f;
+    m_angles1[1] = 0.0f;
+    m_angles1[2] = 0.0f;
+
+    m_view = QMatrix4x4();
+    m_view.lookAt(
+        QVector3D( 0.0f, 2.0f, 10.0f),
+        QVector3D( 0.0f, 0.0f,  0.0f),
+        QVector3D( 0.0f, 1.0f,  0.0f));
+}
+
+Exercise13::~Exercise13()
+{
+    // clean up, save view settings for later use
+    QSettings s;
+    s.beginGroup(settingsGroup);
+
+    s.setValue("angle_x", m_angles0[0]);
+    s.setValue("angle_y", m_angles0[1]);
+    s.setValue("angle_z", m_angles0[2]);
+
+    s.endGroup();
+
+    delete m_drawable;
+}
+
+const bool Exercise13::initialize()
+{
+    if(m_drawable)
+        return true;
+
+    // load obj file
+    m_drawable = ObjIO::fromObjFile("../data/suzanne.obj");
+
+    //setup view by loading formerly saved view configuration
+    QSettings s;
+    s.beginGroup(settingsGroup);
+
+    m_angles0[0] = s.value("angle_x", 0.0f).toFloat();
+    m_angles0[1] = s.value("angle_y", 0.0f).toFloat();
+    m_angles0[2] = s.value("angle_z", 0.0f).toFloat();
+
+    m_angles1[0] = 0.0f;
+    m_angles1[1] = 0.0f;
+    m_angles1[2] = 0.0f;
+
+    s.endGroup();
+
+    return true;
+}
+
+void Exercise13::drawEnvironment(
+    const float x0,
+    const float y0,
+    const float x1,
+    const float y1)
+{
+    const float dy = (y1 - y0) * 0.5;
+
+    glPushMatrix();
+    glTranslatef( x0,  y0, 0.f);
+    
+    for(int i = 0; i < 3; ++i)
+    {
+        glPushMatrix();
+        glRotatef(m_angles0[0], 1.0f, 0.0f, 0.0f);
+        glRotatef(m_angles0[1], 0.0f, 1.0f, 0.0f);
+        glRotatef(m_angles0[2], 0.0f, 0.0f, 1.0f);
+        drawUnitBase();
+        glPopMatrix();
+
+        glTranslatef( 0.0f, dy, 0.0f);
+    }
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef( x1,  y0, 0.0f);
+    
+    for(int i = 0; i < 3; ++i)
+    {
+        glPushMatrix();
+        glRotatef(m_angles1[0], 1.0f, 0.0f, 0.0f);
+        glRotatef(m_angles1[1], 0.0f, 1.0f, 0.0f);
+        glRotatef(m_angles1[2], 0.0f, 0.0f, 1.0f);
+        drawUnitBase();
+        glPopMatrix();
+
+        glTranslatef( 0.0f, dy, 0.0f);
+    }
+    glPopMatrix();
+}
+
+void Exercise13::paintGL()
+{
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+    glLoadMatrixf(m_view.data());
+
+    static const GLfloat mat_diffuse_white[] = { 1.0f, 1.0f, 1.0f, 0.0f};
+
+    static const float tx[2] = { -4.0f, +4.0f };
+    static const float ty[2] = { +2.0f, -2.0f };
+    static const float dy    = (ty[1] - ty[0]) * 0.5f;
+
+    drawEnvironment(tx[0], ty[0], tx[1], ty[1]);
+
+    static QMatrix4x4 scale;
+    if(scale.isIdentity())
+        scale.scale(0.8f);
+    
+    float t = static_cast<float>(m_frame % 360) / 360.f;
+    float x = (tx[1] - tx[0]) * t + tx[0];
+
+    glShadeModel(GL_FLAT);
+
+    for(int i = 0; i < 3; ++i)
+    {
+        glPushMatrix();
+
+        float y = ty[0] + dy * i;
+        glTranslatef( x, y, 0.0f);
+
+        // rotate the model
+        switch(i)
+        {
+            case 0: 
+                interpolateMatrix(t);
+                break;
+            case 1: 
+                interpolateEuler(t);
+                break;
+            case 2: 
+                interpolateQuaternion(t);
+                break;
+            default: 
+                break;
+        }
+
+        // set the material of the model
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse_white);
+        m_drawable->draw(m_mesh, scale);
+
+        // render local coordinate system of the model
+        glEnable(GL_DEPTH_TEST);
+        drawUnitBase(m_base);
+
+        glPopMatrix();
+    }
+}
+
+void Exercise13::interpolateEuler(const float t)
+{
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: Aufgabe 13
+    // - Interpolate rotations by interpolating between the euler angles
+    // - hint: use the lerp method (to be defined below)
+    // - hint: use glRotatef calls for applying the rotation(s)
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //float x, y, z;
+}
+
+void Exercise13::interpolateQuaternion(const float t)
+{
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: Aufgabe 13
+    // - Implement a spherical interpolation based on quaternions
+    // - hint: use the quat method to convert the matrices to quaternions
+    // - hint: use the axisAngle method to get the axis and the angle represented by a quaternion
+    // - hint: use the slerp method (to be defined below)
+    // - hint: use glRotatef calls for applying the rotation(s)
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //QMatrix4x4 A, B;
+}
+
+void Exercise13::interpolateMatrix(const float t)
+{
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: Aufgabe 13
+    // - Interpolate between the elements of the matrices
+    // - hint: use the lerp method (to be defined below)
+    // - hint: use glMultMatrix to apply the rotation
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //QMatrix4x4 A, B;
+    //float C[16];
+}
+
+void Exercise13::slerp(
+    float result[4],
+    const float a[4],
+    const float b[4],
+    const float & t)
+{
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: Aufgabe 13
+    // - Implement the slerp function.
+    // - Keep in mind, that sin(x) might equal zero. Handle that case appropriately.
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+}
+
+void Exercise13::lerp(
+    float & result,
+    const float & a,
+    const float & b,
+    const float & t)
+{
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: Aufgabe 13
+    // - Implement a linear interpolation between a and b as a function of t.
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+}
+
+void Exercise13::quat(
+    float q[4],
+    const float m[16])
+{   
+	double tr = m[0 + 4 * 0] + m[1 + 4 * 1] + m[2 + 4 * 2];
+	if (tr > 0.0) 
+    {
+		q[3] = 0.5 * sqrt(tr + 1.0);
+		float s = 0.25 / q[3];
+		q[0] = (m[2 + 4 * 1] - m[1 + 4 * 2]) * s;
+		q[1] = (m[0 + 4 * 2] - m[2 + 4 * 0]) * s;
+		q[2] = (m[1 + 4 * 0] - m[0 + 4 * 1]) * s;
+	}
+	else 
+    {
+        int i(0), j, k;
+
+        if (m[1 + 4 * 1] > m[0 + 4 * 0])
+            i = 1;
+		if (m[2 + 4 * 2] > m[i + 4 * i]) 
+            i = 2;
+		
+        static const int nxt[3] = { 1, 2, 0 };
+
+        j = nxt[i];
+		k = nxt[j];
+		
+        q[i] = 0.5 * sqrt(m[i + 4 * i] - m[j + 4 * j] - m[k + 4 * k] + 1.0);
+
+		float s = 0.25f / q[i];
+
+		q[3] = (m[k + 4 * j] - m[j + 4 * k]) * s;
+		q[j] = (m[j + 4 * i] + m[i + 4 * j]) * s;
+		q[k] = (m[k + 4 * i] + m[i + 4 * k]) * s;
+	}
+}
+
+void Exercise13::axisAngle(
+    float & angle,
+    float axis[3],
+    const float q[4])
+{
+	const double d = q[0] * q[0] + q[1] * q[1] + q[2] * q[2];
+	double s = 1.0 / sqrt(d + q[3] * q[3]);
+
+	angle = _deg(2.f * atan2(sqrt(d), static_cast<double>(q[3])));
+
+    axis[0] = q[0] * s;
+	axis[1] = q[1] * s;
+	axis[2] = q[2] * s;
+}
+
+void Exercise13::keyPressEvent(QKeyEvent* keyEvent)
+{
+    int i = 0;
+
+    switch(keyEvent->key())
+    {
+        // pause/unpause rendering when space key was pressed
+        case Qt::Key_Space:
+            isActive() ? disable() : enable();
+            break;
+        // adjust the start rotation
+        case Qt::Key_Z:
+            ++i;
+        case Qt::Key_Y:
+            ++i;
+        case Qt::Key_X:
+            m_angles0[i] += keyEvent->modifiers() & Qt::SHIFT ? 1.f : -1.f;
+            updateGL();
+            break;
+        // reset the start rotation
+        case Qt::Key_R:
+            m_angles0[0] = 0.0f;
+            m_angles0[1] = 0.0f;
+            m_angles0[2] = 0.0f;
+            updateGL();
+            break;
+        default:
+            break;
+    }
+
+    AbstractGLExercise::keyPressEvent(keyEvent);
+}
+
+const QString Exercise13::hints() const
+{
+	return "Press [SPACE] to pause/resume animation. Use X, Y, and Z keys to modify orientation at start.";
+}
