@@ -170,17 +170,17 @@ da ´u+v+w = 1´ folgt ´w = 1-u-v´
 
 ´<=> area(Delta(P\_1,P\_2,P\_3)) \* u = area(Delta(Q,P\_2,P\_3))´
 
-**u lässt sich (aus Aufgabeteil a) darstellen als**´ |((1,0),(0,0)) \* A^-1 \* b |;´**Mit der Matrix gewinnen wir den oberen Wert es Vektores, welcher beim Betrag dann allein ist** ´area(Delta(P\_1,P\_2,P\_3))´ **wissen wir von oben**
+**u lässt sich (aus Aufgabeteil a) darstellen als**´ |((1,0),(0,0)) \* (A^-1 \* b) |;´**Mit der Matrix gewinnen wir den oberen Wert es Vektores, welcher beim Betrag dann allein ist** ´area(Delta(P\_1,P\_2,P\_3))´ **wissen wir von oben**
 
-´=> area(Delta(Q,P\_2,P\_3)) = |((1,0),(0,0)) \* A^-1 \* b | \* 1/2 det(A)´
+´=> area(Delta(Q,P\_2,P\_3)) = |((1,0),(0,0)) \* (A^-1 \* b) | \* 1/2 det(A)´
 
 **analog dazu ist:**
 
-´=> area(Delta(Q,P\_1,P\_3)) = |((0,1),(0,0)) \* A^-1 \* b | \* 1/2 det(A)´
+´=> area(Delta(Q,P\_1,P\_3)) = |((0,1),(0,0)) \* (A^-1 \* b) | \* 1/2 det(A)´
 
 **und**
 
-´=> area(Delta(Q,P\_1,P\_2)) = (1 - |((0,1),(0,0)) \* A^-1 \* b |  - |((1,0),(0,0)) \* A^-1 \* b | )\* 1/2 det(A)´
+´=> area(Delta(Q,P\_1,P\_2)) = (1 - |((0,1),(0,0)) \* (A^-1 \* b) |  - |((1,0),(0,0)) \* (A^-1 \* b) | )\* 1/2 det(A)´
 
 ####c
 
@@ -197,7 +197,7 @@ da ´u+v+w = 1´ folgt ´w = 1-u-v´
 ####V1-V4 beweisen, dass es eine abelische Gruppe ist. S1 - S4 garantieren die saubere Multiplikation mit einem Skalar
 
 #####V1 Assozativ
-´((f+g)+h)(x) = (g+(f+h)(x) da (f(x) + g(x)) + h(x) = g(x) + (f(x) + h(x))´ aus (1)
+´((f+g)+h)(x) = (g+(f+h)(x) ´ da ´(f(x) + g(x)) + h(x) = g(x) + (f(x) + h(x))´ aus (1)
 
 #####V2 Existenz eines neutralen Elements bezüglich Addtion
 wenn ´g(x)=0´ dann ist g das neutralle Element für alle ´f(x)=f(x)+g(x)´
@@ -206,7 +206,7 @@ wenn ´g(x)=0´ dann ist g das neutralle Element für alle ´f(x)=f(x)+g(x)´
 ´f(x)^-1 = -f(x)´
 
 #####V4 Kommuntativ
-´(f+g)(x) = (g+f)(x) da f(x) + g(x) = g(x) + f(x)´ aus (1)
+´(f+g)(x) = (g+f)(x)´ da ´f(x) + g(x) = g(x) + f(x)´ aus (1)
 
 #####S1 Distributiv mit einem Skalar
 ´(lambda(f+g)(x)) = lambda (f+g)(x) = lambda f (x) + lambda g (x)´ aus (1) & (2)
