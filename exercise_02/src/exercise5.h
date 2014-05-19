@@ -6,8 +6,8 @@
 //
 #include <QGraphicsView>
 
-class Exercise5 : public QGraphicsView
-{
+class Exercise5 : public QGraphicsView {
+    
     Q_OBJECT
 
 	public:
@@ -50,7 +50,6 @@ class Exercise5 : public QGraphicsView
         QGraphicsScene       m_scene;       /**< Graphics scene */
         QGraphicsPixmapItem* m_imageItem;   /**< Graphics image item */
         QVector<QPoint>      m_metaballs;   /**< List of metaballs */
-
 };
 
 

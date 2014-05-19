@@ -9,12 +9,14 @@
 // Diese Datei bearbeiten.
 //
 // Bearbeiter
-// Matr.-Nr: xxxxx
-// Matr.-Nr: xxxxx
+// Matr.-Nr: 768201
+// Matr.-Nr: 766414
 //
 // ======================================
 
 #include "exercise5.h"
+#include <math.h>
+#include <iostream>
 
 //
 // Qt
@@ -29,15 +31,13 @@ using namespace Qt;
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-const float threshold = 0.1f;
+const float densitySumThreshold = 5.0f;
 
 //[-------------------------------------------------------]
 //[ Helper functions                                      ]
 //[-------------------------------------------------------]
 
-Exercise5::Exercise5(QWidget *parent) :
-    QGraphicsView(parent)
-{
+Exercise5::Exercise5(QWidget *parent) : QGraphicsView(parent) {
     // Create some metaballs
     m_metaballs.push_back(QPoint(10, 10));
     m_metaballs.push_back(QPoint(100, 30));
@@ -55,8 +55,7 @@ Exercise5::Exercise5(QWidget *parent) :
     renderMetaballs();
 }
 
-Exercise5::~Exercise5()
-{
+Exercise5::~Exercise5() {
     //
 }
 
@@ -64,8 +63,7 @@ Exercise5::~Exercise5()
 *  @brief
 *    Called when widget is resized
 */
-void Exercise5::resizeEvent(QResizeEvent *event)
-{
+void Exercise5::resizeEvent (QResizeEvent *event) {
     // Resize graphics scene according to widget size
     m_scene.setSceneRect(contentsRect());
 
@@ -80,24 +78,18 @@ void Exercise5::resizeEvent(QResizeEvent *event)
 *  @brief
 *    Called when mouse button is released
 */
-void Exercise5::mouseReleaseEvent(QMouseEvent *event)
-{
-    //////////////////////////////////////////////////
-    // TODO: Aufgabe 5
-    //////////////////////////////////////////////////
-
+void Exercise5::mouseReleaseEvent (QMouseEvent *event) {
+    
     // Left mouse button
     if (event->button() == Qt::LeftButton) {
-        //////////////////////////////////////////////////////////////////////////
-        // TODO: Add new metaball
-        //////////////////////////////////////////////////////////////////////////
+        
+        m_metaballs.push_back(QPoint(event->x(), event->y()));
     }
 
     // Right mouse button
     else if (event->button() == Qt::RightButton) {
-        //////////////////////////////////////////////////////////////////////////
-        // TODO: remove all metaballs
-        //////////////////////////////////////////////////////////////////////////
+        
+        m_metaballs.clear();
     }
 
     // Update metaballs
@@ -108,56 +100,64 @@ void Exercise5::mouseReleaseEvent(QMouseEvent *event)
 *  @brief
 *    Render metaballs
 */
-void Exercise5::renderMetaballs()
-{
-    //////////////////////////////////////////////////
-    // TODO: Aufgabe 5
-    //////////////////////////////////////////////////
-
+void Exercise5::renderMetaballs () {
+        
     // Get image size
     int w = contentsRect().width();
     int h = contentsRect().height();
 
     // Create temporary map
     float *map = new float[w*h];
+    float max = 0.0;
+    float colorThreshold = 0.8;
 
     // Draw image
     QPixmap image(w, h);
     QPainter painter(&image);
-    for (int y=0; y<h; y++)
-    {
-        for (int x=0; x<w; x++)
-        {
+    
+    for (int y = 0; y < h; y++) {
+        for (int x = 0; x < w; x++) {
+            
+            int pixelNumber = y * w + x;
+            
             // Initialize pixel value
-            map[y*w+x] = 0.0f;
+            map[pixelNumber] = 0.0f;
 
             // Iterate over list of metaballs
-            for (int i=0; i<m_metaballs.size(); i++)
-            {
-                //////////////////////////////////////////////////////////////////////////
-                // TODO: Compute density of metaball i for position (x,y) with a given mass
-                //////////////////////////////////////////////////////////////////////////
+            for (int i = 0; i < m_metaballs.size(); i++) {        
+               
                 float mass = 1000.0f;
-
-                // ...
-
-                //////////////////////////////////////////////////////////////////////////
-                // TODO: Add computed density to the current pixel value
-                //////////////////////////////////////////////////////////////////////////
-
-                // ...
+                
+                float density = mass /
+                    (pow(x - m_metaballs[i].x(), 2) +
+                    pow(y - m_metaballs[i].y(), 2));
+                
+                map[pixelNumber] += density;
             }
-
-            //////////////////////////////////////////////////////////////////////////
-            // TODO: Scale pixel value to range [0, 1]
-            //////////////////////////////////////////////////////////////////////////
-
-            // ...
-
+            
+            if(map[pixelNumber] > densitySumThreshold)
+                map[pixelNumber] = densitySumThreshold;
+            
             // Map value to color
-            float c = map[y*w+x];
-            if (c >= 0 && c < 0.8f) painter.setPen(QColor((int)((c/0.8f)*255), 0.0, 0.0));
-            if (c > 0.8f) painter.setPen(QColor(255, (int)(255*(c-0.8f)/0.2f), (int)(255*(c-0.8f)/0.2f)));
+            float c = map[y * w + x] / densitySumThreshold;
+                                    
+            if (c >= 0 && c < colorThreshold)
+                painter.setPen(
+                    QColor(
+                        (int)((c/colorThreshold) * 255),
+                        0.0,
+                        0.0
+                    )
+                );
+            
+            if (c > colorThreshold)
+                painter.setPen(
+                    QColor(
+                        255,
+                        (int)(255 * (c - colorThreshold)/(1 - colorThreshold)),
+                        (int)(255 * (c - colorThreshold)/(1 - colorThreshold))
+                    )
+                );
 
             // Draw pixel
             painter.drawPoint(QPoint(x, y));
