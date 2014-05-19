@@ -215,7 +215,11 @@ wenn ´g(x)=0´ dann ist g das neutralle Element für alle ´f(x)=f(x)+g(x)´
 ´((lambda + eta) f(x)) = (lambda + eta) (f)(x) = lambda f(x) + eta f(x)´ aus (1) & (2)
 
 #####S3 Assoziativ mit einem Skalar
+´(lambda \* eta) \* f(x) = lambda \* (eta \* f(x))´ aus (2)
 
 #####S4 Existenz eines neutralen Elements bezüglich Multiplikation mit Skalar
+wenn ´lambda=1´ dann ist ´lambda´ das neutralle Element für alle ´f(x)=lambda \* f(x))´
+
+Da alle 8 Eigenschaften hiermit gezeigt sind, ist ´Hom(V,W)´ ein Vektorraum.
 
 
