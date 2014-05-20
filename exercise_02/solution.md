@@ -1,11 +1,14 @@
-# Exercise 2
+# Sheet 2
 
-## 6
+2014-05-19
+
+by 768201 & 766414
+
+## Exercise 6
 
 ### a
 
 ´5 * ((3 \alpha),(4 + \beta),(\gamma)) = ((15 \alpha),(20 + 5 \beta),(5 \gamma))´
-
 
 ### b
 
@@ -24,54 +27,54 @@
 
 ### e
 
-norm´( ((3),(4),(5)) ) =  1 / |((3),(4),(5))| * ((3),(4),(5)) = 1/(5 sqrt(2))  ((3),(4),(5))´ 
+norm´( ((3),(4),(5)) ) =  1 / |((3),(4),(5))| * ((3),(4),(5)) = 1/(5 sqrt(2))  ((3),(4),(5)) = ((3/(5 sqrt(2))), ((2 sqrt(2))/5), (1/sqrt(2)))´
 
 
 ### f
 
-´<((3),(4),(5)),((3),(4),(5))> = 3 \* 2 + 4 \* 4 + 5 \* 6 = 6 + 16 + 30 = 52 ´
+´((3),(4),(5)) \* ((2),(4),(6)) = 3 \* 2 + 4 \* 4 + 5 \* 6 = 6 + 16 + 30 = 52´
 
 
 ### g
 
-´alpha = cos^-1( (<((3),(4),(5)),((3),(4),(5))>) / ( ((3),(4),(5)) * ((3),(4),(5)) ) ) =  cos^-1(52 / (sqrt(50)  sqrt(56))) = 10,67 °´
+´alpha = cos^-1( (((3),(4),(5)) \* ((2),(4),(6))) / ( |((3),(4),(5))| \* |((2),(4),(6))| ) ) =  cos^-1(52 / sqrt(50 * 56) = 10.67 °´
 
 
 ### h
 
-´((3),(2),(5)) Xx ((1),(1),(8)) = ((2 \* 8 - 5 \* 1 ), (5 \* 1 - 3 \* 8), ( \3 * 1 - 2 \* 1)) = ((11), (-19), (1))´
+´((3),(2),(5)) xx ((1),(1),(8)) = ((2 \* 8 - 5 \* 1 ), (5 \* 1 - 3 \* 8), ( \3 \* 1 - 2 \* 1)) = ((11), (-19), (1))´
 
 
 
-## 7
+## Exercise 7
 
 ### a
 
-#### 2 Richtungsvekotre der Ebene berechnen
+2 Richtungsvektoren der Ebene berechnen:
 
 ´vec(a) = vec(P_1P_2) = ((0),(0),(5)) - ((5),(0),(0)) = ((-5),(0),(5))´
 
 ´vec(b) = vec(P_1P_3) = ((10),(0),(5)) - ((5),(0),(0)) = ((5),(0),(5))´ 
 
 
-#### Normalvektor
+Normalvektor:
 
-´vec(n) = vec(a) Xx vec(b) = ((-5),(0),(5)) Xx ((5),(0),(5)) = ((0),(50),(0))´
+´vec(n) = vec(a) xx vec(b) = ((-5),(0),(5)) xx ((5),(0),(5)) = ((0),(50),(0))´
 
 
-#### Da der Vektor ein Richtungsvektor ist, kann man in normalisiert aufschreiben
+Da der Vektor ein Richtungsvektor ist, kann man ihn normalisiert aufschreiben:
 
 ´((0),(50),(0)) => ( (0),(1),(0) )´
 
 
 ### b
 
-Da in allen drei Vektoren die y-Koordinate 0 ist kann man die Rechnung vereinfachen in den die Punkte nur als zwei dimensional betrachtet. Die Punkte wären dann: (5,0), (0,5) und (10,5).
-Nach Laplacescher Entwicklungssatz ergibt sich:
+Da in allen drei Vektoren die y-Koordinate 0 ist kann man die Rechnung vereinfachen in dem man die Punkte nur als zwei dimensional betrachtet. Die Punkte wären dann: ´(5,0)´, ´(0,5)´ und ´(10,5)´.
+Nach dem Laplaceschen Entwicklungssatz ergibt sich:
 ´area(P_1,P_2,P_3) = 1/2 \* | (0 - 5) \* ( 5 - 0) - ( 10 - 5) \* ( 5 - 0 ) | = 1/2 | -25 -25 | = 25´
 
 
-## 8
+## Exercise 8
 
 ### a
 
@@ -84,44 +87,45 @@ Nach Laplacescher Entwicklungssatz ergibt sich:
 
 ### b
 
-´D \* E = ((1,5,3,4),(1,3,2,2),(4,5,-3,2),(4,2,7,1)) \* ((2,3,5,1),(2,1,4,2),(3,4,3,3),(1,3,0,1)) ´
+´D \* E = ((1,5,3,-4),(1,3,2,2),(4,5,-3,2),(4,2,7,1)) \* ((2,3,5,1),(-2,1,4,2),(3,4,3,3),(-1,3,0,1)) ´
 
-´= ((2-10+9+4,3+5+12-12,5+20+9-0,1+10+0-4),(2-6+6-2,3+3+8+6,5+12+6+0,1+6+6+2),(8-10-9-2,12+5-12+6,20-20-9,4+10-9+2),(8-4+21-1,12+2+28+3,20+8+21,4+4+21+1)) ´
+´= ((2-10+9+4,3+5+12-12,5+20+9-0,1+10+0-4), (2-6+6-2,3+3+8+6,5+12+6+0,1+6+6+2), (8-10-9-2,12+5-12+6,20-20-9,4+10-9+2),(8-4+21-1,12+2+28+3,20+8+21,4+4+21+1)) ´
 
 ´= ((5,8,34,16),(0,20,23,15),(-13,11,31,7),(24,45,49,30))´ 
 
-´E \* D =  ((2,3,5,1),(2,1,4,2),(3,4,3,3),(1,3,0,1)) \* ((1,5,3,4),(1,3,2,2),(4,5,-3,2),(4,2,7,1))´
 
-´= ((2+3+20+4,10+9+25+2,6+6-15+7,-8+6+10+1),(-2+1+16+8,-10+3+20+4,-6+2-12+14,8+2+8+2),(3+4+12+12,15+12+15+6,9+8-9+21,-12+8+6+3),(-1+3-0+4,-5+9+10+2,-3+6+0+7,4+5+0+1)) ´
+´E \* D =  ((2,3,5,1),(-2,1,4,2),(3,4,3,3),(-1,3,0,1)) \* ((1,5,3,-4),(1,3,2,2),(4,5,-3,2),(4,2,7,1))´
+
+´= ((2+3+20+4,10+9+25+2,6+6-15+7,-8+6+10+1), (-2+1+16+8,-10+3+20+4,-6+2-12+14,8+2+8+2), (3+4+12+12,15+12+15+6,9+8-9+21,-12+8+6+3), (-1+3-0+4,-5+9+10+2,-3+6+0+7,4+5+0+1)) ´
 
 ´= ((29,46,4,9),(23,17,-2,20),(31,48,29,5),(6,6,10,11))´
 
 
 ### c
 
-´F^T=((6,5,3),(1,8,2),(4,9,7)) = ((6,1,4),(5,8,9),(3,2,7))´
+´F = ((6,5,3),(1,8,2),(4,9,7))´
+´F^T = ((6,1,4),(5,8,9),(3,2,7))´
 
 
 ### d
 
-´det(G)=det( ((6,5),(1,8)) ) = 6 \*8 - 5 * 1 = 43´
+´det(G) = det( ((6,5),(1,8)) ) = 6 \*8 - 5 * 1 = 43´
 
-´det(H)=det( ((2,3,5),(-1,4,2),(3,-2,2)) ) 
-= 3 det( ((1,3),(-2,-5)) ) - 2 det( ((1,3),(-3,-5)) + 6 det( ((1,1),(-3,-2)) ) ´ 
+´det(H) = det(((2,3,5),(-1,4,2),(3,-2,2))) = 2 det( ((4,2),(-2,2)) ) - 3 det( ((-1,2),(3,2)) + 5 det( ((-1,4),(3,-2)) )´ 
+´= 2 \* (8+4) - 3 \* (-2-6) + 4 \* (2-12) = 2 \* 12 - 3 \*  -8  + 5 \* -10  = 24+24-50 = -2´
 
-´= 3 \* (-5+6) - 2 \* (-5+9) + 6 \* (-2+3) = 3 \* 1 - 2 \*  4 - 6 \* 1 = 3-8+6 = 1´
 
 ´det(J) = det( ((2,-3,1,4),(1,3,-2,2),(3,2,3,-3),(4,1,2,2)) )´
 
 ´= 2 det( ((3,-2,2),(2,3,-3),(1,2,2)) ) - det( ((-3,1,4),(2,3,-3),(1,2,2)) ) + 3 det( ((-3,1,4),(3,-2,2),(1,2,2)) ) - 4 det( ((-3,1,4),(3,-2,2),(2,3,-3)) )´
 
-´= 2 \* 52 - (-39) + 3 \* 52 - 4 \* 65 = 39
+´= 2 \* 52 - (-39) + 3 \* 52 - 4 \* 65 = 39´
 
 
 ### e
 
-| K        | E        |  |
-| :-------------: |:-------------:| :-----|
+| K | E | &nbsp; |
+| :---: | :---: | :--- |
 | ´((2,3),(-1,4))´ | ´((1,0),(0,1))´ | Zeilen vertauschen und dann zweite Zeile mal -1 |
 | ´((1,-4),(2,3))´ | ´((0,-1),(1,0))´ | erste Zeile mal -2; die Addition als neue zweite Zeile | 
 | ´((1,-4),(0,11))´ | ´((0,-1),(1,2))´ | zweite Zeile durch 11 |
@@ -129,8 +133,8 @@ Nach Laplacescher Entwicklungssatz ergibt sich:
 | ´((1,0),(0,1))´ | ´((4/11,-1/11),(1/11,2/11))´ | die Matrix die nun bei E steht ist die inverse Matrix von K |
 ´K^-1 = ((4/11,-1/11),(1/11,2/11))´
 
-| L        | E        |  |
-| :-------------: |:-------------:| :-----|
+| L | E | &nbsp; |
+| :---: |:---:| :--- |
 | ´((3,2,6),(1,1,3),(-3,-2,-5))´ | ´((1,0,0),(0,1,0),(0,0,1))´ | Zeilen 1 und 2 vertauschen |
 | ´((1,1,3),(3,2,6),(-3,-2,-5))´ | ´((0,1,0),(1,0,0),(0,0,1))´ | Zeilen 1 (mal -2) und 2 werden addiert und die neue zweite Zeile; Zeilen 1 ( mal 2 ) und 2 werden addiert und die neue dritte Zeile; |
  |´((1,1,3),(0,-1,-3),(0,1,4))´ | ´((0,1,0),(1,-3,0),(0,3,1))´ | Zeilen 2 mal -1; Zeilen 2 und 3 werden addiert und die neue dritte Zeile; |
@@ -139,20 +143,25 @@ Nach Laplacescher Entwicklungssatz ergibt sich:
 ´L^-1 = ((1,-2,0),(-4,3,-3),(1,0,1))´
 
 
-| M        | E        |  |
+| M | E | &nbsp; |
 | :-------------: |:-------------:| 
 | ´((2,-1,3,4),(1,-2,0,2),(4,-1,3,2),(0,1,2,1))´ | ´((1,0,0,0),(0,1,0,0),(0,0,1,0),(0,0,0,1))´ | 
+| … | … |
+<!--
 | ´((1,-2,0,2),(0,-1,3,4),(0,-1,3,2),(0,1,2,1))´ | ´((0,1,0,0),(0,1,0,3),(0,-2,1,0),(0,2/3,0,1))´ | 
 | ´((1,-2,0,2),(0,-1,3,4),(0,0,3,2),(0,0,4,2))´ | ´((0,1,0,0),(0,1,4/3,3),(0,-2,1,-7/3),(0,2/3,11/6,1))´ | 
 | ´((1,-2,0,2),(0,-1,3,4),(0,0,1,2/3),(0,0,0,1))´ | ´((-2,-1,-5,11),(3,1,7/3,-13),(-3,-1/2,-3,5/2),(-2,0,-5/3,4/3))´ | 
 | ´((1,0,0,0),(0,1,0,0),(0,0,1,0),(0,0,0,1))´ | ´((-2,-1/2,-5/3,11/6),(3,1/2,7/3,-13/6),(-3,-1/2,-3,5/2),(-2,0,-5/3,4/3))´ | 
 
-´J^-1 = ((-2,-1/2,-5/3,11/6),(3,1/2,7/3,-13/6),(-3,-1/2,-3,5/2),(-2,0,-5/3,4/3))´
 
+´M^-1 = ((-2,-1/2,-5/3,11/6),(3,1/2,7/3,-13/6),(-3,-1/2,-3,5/2),(-2,0,-5/3,4/3))´
+ -->
 
-### 9
+´M^-1 = 1/6 ((8, -10, 0, -12 ), (15, -18, -3, -18), (-13, 14, 3, 18), (11, -10, -3, -12))´
 
-#### a
+## Exercise 9
+
+### a
 
 ´X_Q = u \* P1_x + v \* P2_x + w \* P3_x´
 ´Y_Q = u \* P1_y + v \* P2_y + w \* P3_y´
@@ -166,7 +175,7 @@ da ´u+v+w = 1´ folgt ´w = 1-u-v´
 ´vec(QP_3) = ((P3_x - P1_x, P3_x - P2_x),(P3_y - P1_y, P3_y - P2_y)) \* ((u),(v))´
 ´((u),(v)) = ((P3_x - P1_x, P3_x - P2_x),(P3_y - P1_y, P3_y - P2_y))^-1 \* vec(QP_3)´
 
-##### Werte einsetzen
+Werte einsetzen:
 
 ´A = ((P3_x - P1_x, P3_x - P2_x),(P3_y - P1_y, P3_y - P2_y)) = ((1-4,7-4),(1-5,2-5)) = ((-3,3),(-4,-3))´
 
@@ -191,7 +200,7 @@ da ´u+v+w = 1´ folgt ´w = 1-u-v´
 ´(6/14, 11/42, 13/42)´
 
 
-#### b
+### b
 
 **Nach Laplacschen Bildungssatz gilt**
 
@@ -224,7 +233,7 @@ da ´u+v+w = 1´ folgt ´w = 1-u-v´
 ´=> area(Delta(Q,P\_1,P\_2)) = (1 - |((0,1),(0,0)) \* (A^-1 \* b) |  - |((1,0),(0,0)) \* (A^-1 \* b) | )\* 1/2 det(A)´
 
 
-#### c
+### c
 
 **Aus Aufgabeteil b** ´area(Delta(P\_1,P\_2,P\_3)) \* u = area(Delta(Q,P\_2,P\_3))´ ** ergeben sich dann folgende Verhältnisse**
 
@@ -234,47 +243,38 @@ da ´u+v+w = 1´ folgt ´w = 1-u-v´
 
 ´w=(area(Delta(Q,P\_2,P\_1)))/(area(Delta(P\_1,P\_2,P\_3)))´
 
-### 10
-
-#### V1-V4 beweisen, dass es eine abelische Gruppe ist. S1 - S4 garantieren die saubere Multiplikation mit einem Skalar
-
-##### V1 Assozativ
-
-´((f+g)+h)(x) = (g+(f+h)(x) ´ da ´(f(x) + g(x)) + h(x) = g(x) + (f(x) + h(x))´ aus (1)
 
 
-##### V2 Existenz eines neutralen Elements bezüglich Addtion
+## Exercise 10
 
-wenn ´g(x)=0´ dann ist g das neutralle Element für alle ´f(x)=f(x)+g(x)´
+**V1 - V4 beweisen, dass es eine abelsche Gruppe ist.**
 
+1. V1 - Assoziativ:
+	´((f+g)+h)(x) = (g+(f+h)(x) ´ da ´(f(x) + g(x)) + h(x) = g(x) + (f(x) + h(x))´ aus (1)
 
-##### V3 Existens eines inversen Elements
+2. V2 - Existenz eines neutralen Elements bezüglich Addition:
+	wenn ´g(x)=0´ dann ist g das neutrale Element für alle ´f(x)=f(x)+g(x)´
 
-´f(x)^-1 = -f(x)´
+3. V3 - Existenz eines inversen Elements:
+	´f(x)^-1 = -f(x)´
 
-
-##### V4 Kommuntativ
-
-´(f+g)(x) = (g+f)(x)´ da ´f(x) + g(x) = g(x) + f(x)´ aus (1)
-
-
-##### S1 Distributiv mit einem Skalar
-
-´(lambda(f+g)(x)) = lambda (f+g)(x) = lambda f (x) + lambda g (x)´ aus (1) & (2)
+4. V4 - Kommutativ:
+	´(f+g)(x) = (g+f)(x)´ da ´f(x) + g(x) = g(x) + f(x)´ aus (1)
 
 
-##### S2 Skalar distributiv mit Element des Vektorraums
+**S1 - S4 garantieren die saubere Multiplikation mit einem Skalar.**
 
-´((lambda + eta) f(x)) = (lambda + eta) (f)(x) = lambda f(x) + eta f(x)´ aus (1) & (2)
+1. S1 - Distributiv mit einem Skalar:
+	´(lambda(f+g)(x)) = lambda (f+g)(x) = lambda f (x) + lambda g (x)´ aus (1) & (2)
+
+2. S2 - Skalar distributiv mit Element des Vektorraums
+	´((lambda + eta) f(x)) = (lambda + eta) (f)(x) = lambda f(x) + eta f(x)´ aus (1) & (2)
+
+3. S3 - Assoziativ mit einem Skalar
+	´(lambda \* eta) \* f(x) = lambda \* (eta \* f(x))´ aus (2)
+
+4. S4 - Existenz eines neutralen Elements bezüglich Multiplikation mit Skalar:
+	Wenn ´lambda = 1´ dann ist ´lambda´ das neutrale Element für alle ´f(x) = lambda \* f(x))´
 
 
-##### S3 Assoziativ mit einem Skalar
-
-´(lambda \* eta) \* f(x) = lambda \* (eta \* f(x))´ aus (2)
-
-
-##### S4 Existenz eines neutralen Elements bezüglich Multiplikation mit Skalar
-
-Wenn ´lambda=1´ dann ist ´lambda´ das neutralle Element für alle ´f(x)=lambda \* f(x))´
-
-Da alle 8 Eigenschaften hiermit gezeigt sind, ist ´Hom(V,W)´ ein Vektorraum.
+**Da hiermit alle 8 Eigenschaften gezeigt sind, ist ´Hom(V,W)´ ein Vektorraum.**
