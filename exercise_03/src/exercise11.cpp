@@ -81,26 +81,26 @@ void Exercise11::rotateClockwise(int frame)
 {
     using namespace std;
     
-    float degree = frame % 720;
-    float fraction = degree/90;
+    float degree = frame % 360;
+    float fraction = degree/45;
     float offset = abs(sin((3 - fraction) * M_PI)) * ((M_SQRT2 - 1)/2);
 
-    if (degree < 90)
+    if (degree < 45)
         glTranslatef(1 + offset, fraction, 0);
     
-    else if (degree < 270)
+    else if (degree < 135)
         glTranslatef(2 - fraction, 1 + offset, 0);
     
-    else if (degree < 450)
+    else if (degree < 225)
         glTranslatef(-1 - offset, 4 - fraction, 0);
     
-    else  if (degree < 630)
+    else  if (degree < 315)
         glTranslatef(fraction - 6, -1 - offset, 0);
 
-    else  if (degree < 720)
+    else  if (degree < 360)
         glTranslatef(1 + offset, fraction - 8, 0);
     
-    glRotatef(degree, 0, 0, 1);
+    glRotatef(degree * 2, 0, 0, 1);
 }
 
 void Exercise11::keyPressEvent(QKeyEvent * keyEvent)
