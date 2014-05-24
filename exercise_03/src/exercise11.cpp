@@ -9,8 +9,8 @@
 // Diese Datei bearbeiten.
 //
 // Bearbeiter
-// Matr.-Nr: xxxxx
-// Matr.-Nr: xxxxx
+// Matr.-Nr: 768201
+// Matr.-Nr: 766414
 //
 // ======================================
 
@@ -22,6 +22,7 @@
 
 #include "exercise11.h"
 #include "mathmacros.h"
+#include <iostream>
 
 //[-------------------------------------------------------]
 //[ Helper functions                                      ]
@@ -78,10 +79,28 @@ void Exercise11::paintGL()
 
 void Exercise11::rotateClockwise(int frame)
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 11
-    // Apply correct transformations (glRotatef, glTranslatef, ..) with respect to the current frame
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+    using namespace std;
+    
+    float degree = frame % 720;
+    float fraction = degree/90;
+    float offset = abs(sin((3 - fraction) * M_PI)) * ((M_SQRT2 - 1)/2);
+
+    if (degree < 90)
+        glTranslatef(1 + offset, fraction, 0);
+    
+    else if (degree < 270)
+        glTranslatef(2 - fraction, 1 + offset, 0);
+    
+    else if (degree < 450)
+        glTranslatef(-1 - offset, 4 - fraction, 0);
+    
+    else  if (degree < 630)
+        glTranslatef(fraction - 6, -1 - offset, 0);
+
+    else  if (degree < 720)
+        glTranslatef(1 + offset, fraction - 8, 0);
+    
+    glRotatef(degree, 0, 0, 1);
 }
 
 void Exercise11::keyPressEvent(QKeyEvent * keyEvent)
