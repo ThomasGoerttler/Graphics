@@ -210,7 +210,13 @@ void Exercise13::interpolateEuler(const float t)
     // - hint: use the lerp method (to be defined below)
     // - hint: use glRotatef calls for applying the rotation(s)
     /////////////////////////////////////////////////////////////////////////////////////////////////
-
+	float x,y,z;
+	lerp(x, m_angles1[0], m_angles0[0], t);
+	lerp(y, m_angles1[1], m_angles0[1], t);
+	lerp(z, m_angles1[2], m_angles0[2], t);
+	glRotatef(x, 1,0,0);
+	glRotatef(y, 0,1,0);
+	glRotatef(z, 0,0,1);
     //float x, y, z;
 }
 
@@ -224,9 +230,33 @@ void Exercise13::interpolateQuaternion(const float t)
     // - hint: use the slerp method (to be defined below)
     // - hint: use glRotatef calls for applying the rotation(s)
     /////////////////////////////////////////////////////////////////////////////////////////////////
+	float* m1 = new float[16];
+	glGetFloatv(GL_MODELVIEW_MATRIX, m1);
 
-    //QMatrix4x4 A, B;
+	//get Matrix 2 for Quaternion 2
+	float* m2 = new float[16];
+	glRotatef(m_angles0[0], 1,0,0);
+	glRotatef(m_angles0[1], 0,1,0);
+	glRotatef(m_angles0[2], 0,0,1);
+	glGetFloatv(GL_MODELVIEW_MATRIX, m2);
+	glRotatef(-m_angles0[2], 0,0,1);
+	glRotatef(-m_angles0[1], 0,1,0);
+	glRotatef(-m_angles0[0], 1,0,0);
+
+	//convert Matrix to Quaternion and interpolate
+	float* q1 = new float[4]; quat(q1, m1);
+	float* q2 = new float[4]; quat(q2, m2);
+	float* result = new float[4];
+	slerp(result, q2, q1, t);
+
+	//convert Quaternion to Axis & Angle und apply Changes
+	float angle;
+	float* axis = new float[3];
+	axisAngle(angle, axis, result);
+	glRotatef(angle, axis[0], axis[1], axis[2]);
 }
+    //QMatrix4x4 A, B;
+
 
 void Exercise13::interpolateMatrix(const float t)
 {
@@ -236,7 +266,33 @@ void Exercise13::interpolateMatrix(const float t)
     // - hint: use the lerp method (to be defined below)
     // - hint: use glMultMatrix to apply the rotation
     /////////////////////////////////////////////////////////////////////////////////////////////////
+	float cosIntrpl = t * _cosd(m_angles1[0]) + (1-t) * _cosd(-m_angles0[0]); 
+	float sinIntrpl = t * _sind(m_angles1[0]) + (1-t) * _sind(-m_angles0[0]); 
+	GLfloat matrixX[16] = {
+							1.f,	0.f,			0.f,		0.f,
+							0.f,	cosIntrpl,		-sinIntrpl,	0.f,
+							0.f,	sinIntrpl,		cosIntrpl,	0.f,
+							0.f,	0.f,			0.f,		1.f	};
+	glMultMatrixf(matrixX);
 
+	
+	cosIntrpl = t * _cosd(m_angles1[1]) + (1-t) * _cosd(-m_angles0[1]); 
+	sinIntrpl = t * _sind(m_angles1[1]) + (1-t) * _sind(-m_angles0[1]); 
+	GLfloat matrixY[16] = {
+							cosIntrpl,		0.f,	sinIntrpl,	0.f,
+							0.f,			1.f,	0.f,		0.f,
+							-sinIntrpl,		0.f,	cosIntrpl,	0.f,
+							0.f,			0.f,	0.f,		 1.f	};
+	glMultMatrixf(matrixY);
+	
+	cosIntrpl = t * _cosd(m_angles1[2]) + (1-t) * _cosd(-m_angles0[2]); 
+	sinIntrpl = t *  _sind(m_angles1[2]) + (1-t) * _sind(-m_angles0[2]); 
+	GLfloat matrixZ[16] = {
+							cosIntrpl,		-sinIntrpl,	0.f,	0.f,	
+							sinIntrpl,		cosIntrpl,	0.f,	0.f, 
+							0.f,			0.f,		1.f,	0.f,
+							0.f,			0.f,		0.f,	1.f	};
+	glMultMatrixf(matrixZ);
     //QMatrix4x4 A, B;
     //float C[16];
 }
@@ -251,6 +307,24 @@ void Exercise13::slerp(
     // TODO: Aufgabe 13
     // - Implement the slerp function.
     // - Keep in mind, that sin(x) might equal zero. Handle that case appropriately.
+	float alpha = _acosd( a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3]);
+
+	float c1;
+	float c2;
+
+	if( alpha >= 0.0001)
+	{
+		c1 = _sind((1-t) * alpha) / _sind(alpha);
+		c2 = _sind(t*alpha) / _sind(alpha);
+	}else
+	{
+		c1 = _sind((1-t) * alpha) / 0.0001;
+		c2 = _sind(t*alpha) / 0.0001;
+	}
+	result[0] = a[0]*c1 + b[0]*c2;
+	result[1] = a[1]*c1 + b[1]*c2;
+	result[2] = a[2]*c1 + b[2]*c2;
+	result[3] = a[3]*c1 + b[3]*c2;
     /////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
@@ -263,7 +337,7 @@ void Exercise13::lerp(
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: Aufgabe 13
     // - Implement a linear interpolation between a and b as a function of t.
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+   result = (b-a) * (1-t); /////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 void Exercise13::quat(
