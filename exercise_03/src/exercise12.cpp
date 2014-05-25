@@ -9,8 +9,8 @@
 // Diese Datei bearbeiten.
 //
 // Bearbeiter
-// Matr.-Nr: xxxxx
-// Matr.-Nr: xxxxx
+// Matr.-Nr: 768201
+// Matr.-Nr: 766414
 //
 // ======================================
 
@@ -24,6 +24,7 @@
 #include "mathmacros.h"
 
 #include "exercise12.h"
+#include <iostream>
 
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
@@ -134,8 +135,14 @@ void Exercise12::paintGL()
 	glDisable(GL_TEXTURE_2D);
 }
 
+float deg2rad(float degrees) {
+    return degrees * M_PI / 180;
+};
+
 void Exercise12::applyBallTransformation(const int frame)
 {
+    using namespace std;
+    
 	static const float fX = 0.01f;
     static const int numFramesPerAnimation = static_cast<int>(4.0f / fX);
 
@@ -143,6 +150,10 @@ void Exercise12::applyBallTransformation(const int frame)
     static const float d = 0.3f * r;
 
     static const float z = 0.0f;
+    
+    float startX = -2.0;
+    float startY = 0.8;
+    float endX = 2.0;
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: Aufgabe 12
@@ -156,10 +167,81 @@ void Exercise12::applyBallTransformation(const int frame)
     // - Apply matrices in the correct order, using glMultMatrixf(..)
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // float x, y;
-    // const float translate[16] = {..}
-    // const float rotate[16] = {..}
-    // const float scale[16] = {..}
+    int step = frame % numFramesPerAnimation,
+        keyStep = floor(step/25),
+        keyStepScale = floor(step/5);
+    
+    
+    float heightKeyFrames[] = {
+        0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.4, -0.4, -1.05, -0.2, 0.22, 0.35, 0.4, 0.4, 0.4, 0.4, 0.4
+    };
+
+    float rotateKeyFrames[] = {
+        0, 40.0, 80.0, 120.0, 160.0, 200.0, 220.0, 240.0, 260.0, 280.0,
+        300.0, 320.0, 360.0, 400.0, 440.0, 480.0, 520.0
+    };
+
+    float scaleKeyFrames[81] = {};
+    
+    for (int i = 0; i < 81; ++i)
+        scaleKeyFrames[i] = 1;
+    
+    scaleKeyFrames[40] = 0.7;
+    
+    
+    float interpolatedYValue = heightKeyFrames[keyStep] +
+        (
+            (heightKeyFrames[keyStep + 1] - heightKeyFrames[keyStep]) *
+            ((step - (keyStep * 25.0))/25.0)
+        );
+
+    float interpolatedRotation = -deg2rad(rotateKeyFrames[keyStep] + 
+        (
+            (rotateKeyFrames[keyStep + 1] - rotateKeyFrames[keyStep]) *
+            ((step - (keyStep * 25.0))/25.0)
+        ));
+    
+    float interpolatedScaling = scaleKeyFrames[keyStepScale] + 
+        (
+            (scaleKeyFrames[keyStepScale + 1] - scaleKeyFrames[keyStepScale]) *
+            ((step - (keyStepScale * 5.0))/5.0)
+        );
+    
+    
+    const float translate[16] = {
+        1,0,0,0,
+        0,1,0,0,
+        0,0,1,0,
+        startX + (fX * step), interpolatedYValue + (0.3 * interpolatedScaling), 0, 1
+    };
+            
+    const float rotate[16] = {
+        cos(interpolatedRotation), sin(interpolatedRotation), 0, 0,
+        -sin(interpolatedRotation), cos(interpolatedRotation), 0, 0,
+        0,0,1,0,
+        0,0,0,1
+    };
+    
+    const float scale[16] = {
+        1,0,0,0,
+        0,interpolatedScaling,0,0,
+        0,0,1,0,
+        0,0,0,1
+    };
+    
+
+    //float translate
+
+    
+    glMultMatrixf(translate);
+    
+    glMultMatrixf(scale);
+    
+    glMultMatrixf(rotate);
+    
+    //glTranslatef(startX + (fX * step), translate[keySteps] + 0.3, 0);
+    
+    
 }
 
 void Exercise12::initializeGL()

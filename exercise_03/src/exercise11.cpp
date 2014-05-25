@@ -85,8 +85,8 @@ void Exercise11::rotateClockwise(int frame)
     float fraction = degree/45;
     float offset = abs(sin((3 - fraction) * M_PI)) * ((M_SQRT2 - 1)/2);
 
-    if (degree < 45)
-        glTranslatef(1 + offset, fraction, 0);
+    if (degree < 45) 
+        glTranslatef(1 + offset, fraction, 0); 
     
     else if (degree < 135)
         glTranslatef(2 - fraction, 1 + offset, 0);
