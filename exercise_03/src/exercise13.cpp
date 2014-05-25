@@ -303,29 +303,24 @@ void Exercise13::slerp(
     const float b[4],
     const float & t)
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 13
-    // - Implement the slerp function.
-    // - Keep in mind, that sin(x) might equal zero. Handle that case appropriately.
-	float alpha = _acosd( a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3]);
+
+	float angle = _acosd( a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3]);
 
 	float c1;
 	float c2;
 
-	if( alpha >= 0.0001)
-	{
-		c1 = _sind((1-t) * alpha) / _sind(alpha);
-		c2 = _sind(t*alpha) / _sind(alpha);
-	}else
-	{
-		c1 = _sind((1-t) * alpha) / 0.0001;
-		c2 = _sind(t*alpha) / 0.0001;
+	if( angle >= 0.0001) {
+		c1 = _sind( (1 - t) * angle) / _sind(angle);
+		c2 = _sind(t * angle) / _sind(angle);
+	} else {
+		c1 = _sind((1-t) * angle) / 0.0001;
+		c2 = _sind(t * angle) / 0.0001;
 	}
-	result[0] = a[0]*c1 + b[0]*c2;
-	result[1] = a[1]*c1 + b[1]*c2;
-	result[2] = a[2]*c1 + b[2]*c2;
-	result[3] = a[3]*c1 + b[3]*c2;
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+	result[0] = a[0] * c1 + b[0] * c2;
+	result[1] = a[1] * c1 + b[1] * c2;
+	result[2] = a[2] * c1 + b[2] * c2;
+	result[3] = a[3] * c1 + b[3] * c2;
+   
 }
 
 void Exercise13::lerp(
@@ -334,10 +329,8 @@ void Exercise13::lerp(
     const float & b,
     const float & t)
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 13
-    // - Implement a linear interpolation between a and b as a function of t.
-   result = (b-a) * (1-t); /////////////////////////////////////////////////////////////////////////////////////////////////
+   // result = (b - a) * (1 - t); 
+	result = t * a - (1 - t ) * b;
 }
 
 void Exercise13::quat(
