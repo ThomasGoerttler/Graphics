@@ -9,8 +9,8 @@
 // Diese Datei bearbeiten.
 //
 // Bearbeiter
-// Matr.-Nr: xxxxx
-// Matr.-Nr: xxxxx
+// Matr.-Nr: 766414
+// Matr.-Nr: 1337
 //
 // ======================================
 
@@ -230,30 +230,30 @@ void Exercise13::interpolateQuaternion(const float t)
     // - hint: use the slerp method (to be defined below)
     // - hint: use glRotatef calls for applying the rotation(s)
     /////////////////////////////////////////////////////////////////////////////////////////////////
-	float* m1 = new float[16];
-	glGetFloatv(GL_MODELVIEW_MATRIX, m1);
+	float* matrix1 = new float[16];
 
-	//get Matrix 2 for Quaternion 2
-	float* m2 = new float[16];
-	glRotatef(m_angles0[0], 1,0,0);
-	glRotatef(m_angles0[1], 0,1,0);
-	glRotatef(m_angles0[2], 0,0,1);
-	glGetFloatv(GL_MODELVIEW_MATRIX, m2);
-	glRotatef(-m_angles0[2], 0,0,1);
-	glRotatef(-m_angles0[1], 0,1,0);
-	glRotatef(-m_angles0[0], 1,0,0);
+	glGetFloatv(GL_MODELVIEW_MATRIX, matrix1);
+	glRotatef(m_angles0[0], 1, 0, 0);
+	glRotatef(m_angles0[1], 0, 1, 0);
+	glRotatef(m_angles0[2], 0, 0, 1);
+
+	float* matrix2 = new float[16];
+	glGetFloatv(GL_MODELVIEW_MATRIX, matrix2);
+	glRotatef(-m_angles0[2], 0, 0, 1);
+	glRotatef(-m_angles0[1], 0, 1, 0);
+	glRotatef(-m_angles0[0], 1, 0, 0);
 
 	//convert Matrix to Quaternion and interpolate
-	float* q1 = new float[4]; quat(q1, m1);
-	float* q2 = new float[4]; quat(q2, m2);
+	float* q1 = new float[4]; quat(q1, matrix1);
+	float* q2 = new float[4]; quat(q2, matrix2);
 	float* result = new float[4];
 	slerp(result, q2, q1, t);
 
 	//convert Quaternion to Axis & Angle und apply Changes
 	float angle;
-	float* axis = new float[3];
-	axisAngle(angle, axis, result);
-	glRotatef(angle, axis[0], axis[1], axis[2]);
+	float* pivot = new float[3];
+	axisAngle(angle, pivot, result);
+	glRotatef(angle, pivot[0], pivot[1], pivot[2]);
 }
     //QMatrix4x4 A, B;
 
@@ -266,32 +266,39 @@ void Exercise13::interpolateMatrix(const float t)
     // - hint: use the lerp method (to be defined below)
     // - hint: use glMultMatrix to apply the rotation
     /////////////////////////////////////////////////////////////////////////////////////////////////
-	float cosIntrpl = t * _cosd(m_angles1[0]) + (1-t) * _cosd(-m_angles0[0]); 
-	float sinIntrpl = t * _sind(m_angles1[0]) + (1-t) * _sind(-m_angles0[0]); 
+	float cosIntrpl, sinIntrpl;
+//	float cosIntrpl = t * _cosd(m_angles1[0]) + (1-t) * _cosd(-m_angles0[0]); 
+//	float sinIntrpl = t * _sind(m_angles1[0]) + (1-t) * _sind(-m_angles0[0]); 
+	lerp(cosIntrpl, _cosd(m_angles1[0]), _cosd(-m_angles0[0]), t);	
+	lerp(sinIntrpl, _sind(m_angles1[0]), _sind(-m_angles0[0]), t);
 	GLfloat matrixX[16] = {
-							1.f,	0.f,			0.f,		0.f,
-							0.f,	cosIntrpl,		-sinIntrpl,	0.f,
-							0.f,	sinIntrpl,		cosIntrpl,	0.f,
-							0.f,	0.f,			0.f,		1.f	};
+							1.f, 0.f, 0.f, 0.f,
+							0.f, cosIntrpl,	-sinIntrpl,	0.f,
+							0.f, sinIntrpl,	cosIntrpl, 0.f,
+							0.f, 0.f, 0.f, 1.f	};
 	glMultMatrixf(matrixX);
 
 	
-	cosIntrpl = t * _cosd(m_angles1[1]) + (1-t) * _cosd(-m_angles0[1]); 
-	sinIntrpl = t * _sind(m_angles1[1]) + (1-t) * _sind(-m_angles0[1]); 
+	//cosIntrpl = t * _cosd(m_angles1[1]) + (1-t) * _cosd(-m_angles0[1]); 
+	//sinIntrpl = t * _sind(m_angles1[1]) + (1-t) * _sind(-m_angles0[1]); 
+	lerp(cosIntrpl, _cosd(m_angles1[1]), _cosd(-m_angles0[1]), t);	
+	lerp(sinIntrpl, _sind(m_angles1[1]), _sind(-m_angles0[1]), t);
 	GLfloat matrixY[16] = {
-							cosIntrpl,		0.f,	sinIntrpl,	0.f,
-							0.f,			1.f,	0.f,		0.f,
-							-sinIntrpl,		0.f,	cosIntrpl,	0.f,
-							0.f,			0.f,	0.f,		 1.f	};
+							cosIntrpl, 0.f,	sinIntrpl, 0.f,
+							0.f, 1.f, 0.f, 0.f,
+							-sinIntrpl,	0.f, cosIntrpl,	0.f,
+							0.f, 0.f, 0.f, 1.f};
 	glMultMatrixf(matrixY);
 	
-	cosIntrpl = t * _cosd(m_angles1[2]) + (1-t) * _cosd(-m_angles0[2]); 
-	sinIntrpl = t *  _sind(m_angles1[2]) + (1-t) * _sind(-m_angles0[2]); 
+//	cosIntrpl = t * _cosd(m_angles1[2]) + (1-t) * _cosd(-m_angles0[2]); 
+//	sinIntrpl = t *  _sind(m_angles1[2]) + (1-t) * _sind(-m_angles0[2]); 
+	lerp(cosIntrpl, _cosd(m_angles1[2]), _cosd(-m_angles0[2]), t);	
+	lerp(sinIntrpl, _sind(m_angles1[2]), _sind(-m_angles0[2]), t);
 	GLfloat matrixZ[16] = {
-							cosIntrpl,		-sinIntrpl,	0.f,	0.f,	
-							sinIntrpl,		cosIntrpl,	0.f,	0.f, 
-							0.f,			0.f,		1.f,	0.f,
-							0.f,			0.f,		0.f,	1.f	};
+							cosIntrpl, -sinIntrpl, 0.f,	0.f,	
+							sinIntrpl, cosIntrpl, 0.f, 0.f, 
+							0.f, 0.f, 1.f, 0.f,
+							0.f, 0.f, 0.f, 1.f};
 	glMultMatrixf(matrixZ);
     //QMatrix4x4 A, B;
     //float C[16];
@@ -329,8 +336,8 @@ void Exercise13::lerp(
     const float & b,
     const float & t)
 {
-   // result = (b - a) * (1 - t); 
-	result = t * a - (1 - t ) * b;
+	//result = (b - a) * (1 - t); 
+	result = t * a + (1 - t ) * b;
 }
 
 void Exercise13::quat(
