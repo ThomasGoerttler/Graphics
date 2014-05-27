@@ -10,7 +10,7 @@
 //
 // Bearbeiter
 // Matr.-Nr: 766414
-// Matr.-Nr: 1337
+// Matr.-Nr: 768201
 //
 // ======================================
 
@@ -336,7 +336,6 @@ void Exercise13::lerp(
     const float & b,
     const float & t)
 {
-	//result = (b - a) * (1 - t); 
 	result = t * a + (1 - t ) * b;
 }
 
