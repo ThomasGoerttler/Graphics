@@ -190,11 +190,11 @@ void Exercise13::paintGL()
                 break;
         }
 
-        // set the material of the model
+
         glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse_white);
         m_drawable->draw(m_mesh, scale);
 
-        // render local coordinate system of the model
+
         glEnable(GL_DEPTH_TEST);
         drawUnitBase(m_base);
 
@@ -204,12 +204,7 @@ void Exercise13::paintGL()
 
 void Exercise13::interpolateEuler(const float t)
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 13
-    // - Interpolate rotations by interpolating between the euler angles
-    // - hint: use the lerp method (to be defined below)
-    // - hint: use glRotatef calls for applying the rotation(s)
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+    
 	float x,y,z;
 	lerp(x, m_angles1[0], m_angles0[0], t);
 	lerp(y, m_angles1[1], m_angles0[1], t);
@@ -217,20 +212,12 @@ void Exercise13::interpolateEuler(const float t)
 	glRotatef(x, 1,0,0);
 	glRotatef(y, 0,1,0);
 	glRotatef(z, 0,0,1);
-    //float x, y, z;
 }
 
 void Exercise13::interpolateQuaternion(const float t)
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 13
-    // - Implement a spherical interpolation based on quaternions
-    // - hint: use the quat method to convert the matrices to quaternions
-    // - hint: use the axisAngle method to get the axis and the angle represented by a quaternion
-    // - hint: use the slerp method (to be defined below)
-    // - hint: use glRotatef calls for applying the rotation(s)
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-	float* matrix1 = new float[16];
+   
+    float* matrix1 = new float[16];
 
 	glGetFloatv(GL_MODELVIEW_MATRIX, matrix1);
 	glRotatef(m_angles0[0], 1, 0, 0);
@@ -243,32 +230,23 @@ void Exercise13::interpolateQuaternion(const float t)
 	glRotatef(-m_angles0[1], 0, 1, 0);
 	glRotatef(-m_angles0[0], 1, 0, 0);
 
-	//convert Matrix to Quaternion and interpolate
 	float* q1 = new float[4]; quat(q1, matrix1);
 	float* q2 = new float[4]; quat(q2, matrix2);
 	float* result = new float[4];
 	slerp(result, q2, q1, t);
 
-	//convert Quaternion to Axis & Angle und apply Changes
 	float angle;
 	float* pivot = new float[3];
 	axisAngle(angle, pivot, result);
 	glRotatef(angle, pivot[0], pivot[1], pivot[2]);
 }
-    //QMatrix4x4 A, B;
+   
 
 
 void Exercise13::interpolateMatrix(const float t)
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 13
-    // - Interpolate between the elements of the matrices
-    // - hint: use the lerp method (to be defined below)
-    // - hint: use glMultMatrix to apply the rotation
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+   
 	float cosIntrpl, sinIntrpl;
-//	float cosIntrpl = t * _cosd(m_angles1[0]) + (1-t) * _cosd(-m_angles0[0]); 
-//	float sinIntrpl = t * _sind(m_angles1[0]) + (1-t) * _sind(-m_angles0[0]); 
 	lerp(cosIntrpl, _cosd(m_angles1[0]), _cosd(-m_angles0[0]), t);	
 	lerp(sinIntrpl, _sind(m_angles1[0]), _sind(-m_angles0[0]), t);
 	GLfloat matrixX[16] = {
@@ -279,8 +257,6 @@ void Exercise13::interpolateMatrix(const float t)
 	glMultMatrixf(matrixX);
 
 	
-	//cosIntrpl = t * _cosd(m_angles1[1]) + (1-t) * _cosd(-m_angles0[1]); 
-	//sinIntrpl = t * _sind(m_angles1[1]) + (1-t) * _sind(-m_angles0[1]); 
 	lerp(cosIntrpl, _cosd(m_angles1[1]), _cosd(-m_angles0[1]), t);	
 	lerp(sinIntrpl, _sind(m_angles1[1]), _sind(-m_angles0[1]), t);
 	GLfloat matrixY[16] = {
@@ -290,8 +266,6 @@ void Exercise13::interpolateMatrix(const float t)
 							0.f, 0.f, 0.f, 1.f};
 	glMultMatrixf(matrixY);
 	
-//	cosIntrpl = t * _cosd(m_angles1[2]) + (1-t) * _cosd(-m_angles0[2]); 
-//	sinIntrpl = t *  _sind(m_angles1[2]) + (1-t) * _sind(-m_angles0[2]); 
 	lerp(cosIntrpl, _cosd(m_angles1[2]), _cosd(-m_angles0[2]), t);	
 	lerp(sinIntrpl, _sind(m_angles1[2]), _sind(-m_angles0[2]), t);
 	GLfloat matrixZ[16] = {
@@ -300,8 +274,7 @@ void Exercise13::interpolateMatrix(const float t)
 							0.f, 0.f, 1.f, 0.f,
 							0.f, 0.f, 0.f, 1.f};
 	glMultMatrixf(matrixZ);
-    //QMatrix4x4 A, B;
-    //float C[16];
+	
 }
 
 void Exercise13::slerp(
