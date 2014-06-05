@@ -9,8 +9,8 @@
 // Diese Datei bearbeiten.
 //
 // Bearbeiter
-// Matr.-Nr: xxxxx
-// Matr.-Nr: xxxxx
+// Matr.-Nr: 768201
+// Matr.-Nr: 766414
 //
 // ======================================
 
@@ -21,6 +21,7 @@
 #include <QTimerEvent>
 #include "mathdefinitions.h"
 #include "threedobject.h"
+#include <iostream>
 
 namespace
 {
@@ -63,11 +64,36 @@ void AbstractGLExercise::initializeViews()
         QVector3D( 0.0f, 0.0f, 0.0f),
         QVector3D( 0.0f, 1.0f, 0.0f));
 
-//    m_views[OrthoFront].lookAt(..);
-//    m_views[OrthoBack].lookAt(..);
-//    m_views[OrthoTop].lookAt(..);
-//    m_views[OrthoLeft].lookAt(..);
-//    m_views[OrthoRight].lookAt(..);
+
+    m_views[OrthoFront].lookAt(
+        QVector3D( 0.0f, 0.0f, 6.0f),
+        QVector3D( 0.0f, 0.0f, 0.0f),
+        QVector3D( 0.0f, 1.0f, 0.0f));
+
+    m_views[OrthoFront].lookAt(
+        QVector3D( 0.0f, 0.0f, 6.0f),
+        QVector3D( 0.0f, 0.0f, 0.0f),
+        QVector3D( 0.0f, 1.0f, 0.0f));
+
+    m_views[OrthoBack].lookAt(
+        QVector3D( 0.0f, 0.0f, -6.0f),
+        QVector3D( 0.0f, 0.0f, 0.0f),
+        QVector3D( 0.0f, 1.0f, 0.0f));
+
+    m_views[OrthoTop].lookAt(
+        QVector3D( 0.0f, 6.0f, 0.0f),
+        QVector3D( 0.0f, 0.0f, 0.0f),
+        QVector3D( 0.0f, 0.0f, -1.0f));
+
+    m_views[OrthoLeft].lookAt(
+        QVector3D( 6.0f, 0.0f, 0.0f),
+        QVector3D( 0.0f, 0.0f, 0.0f),
+        QVector3D( 0.0f, 1.0f, 0.0f));
+
+    m_views[OrthoRight].lookAt(
+        QVector3D( -6.0f, 0.0f, 0.0f),
+        QVector3D( 0.0f, 0.0f, 0.0f),
+        QVector3D( 0.0f, 1.0f, 0.0f));
 }
 
 void AbstractGLExercise::timerEvent(QTimerEvent * event)
@@ -143,7 +169,10 @@ void AbstractGLExercise::setupOrthoProjection(float &aspectRatio)
     // Setup a correct orthogonal projection via the ortho()-method of QMatrix4x4.
     // Use 0.1 for near and 120.0 for far plane parameters.
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
     m_projection = QMatrix4x4();
+
+    m_projection.ortho(-2 * aspectRatio, 2 * aspectRatio, -2, 2, 0.1, 120.0);
 }
 
 void AbstractGLExercise::resizeGL(int width, int height)

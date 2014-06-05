@@ -9,8 +9,8 @@
 // Diese Datei bearbeiten.
 //
 // Bearbeiter
-// Matr.-Nr: xxxxx
-// Matr.-Nr: xxxxx
+// Matr.-Nr: 768201
+// Matr.-Nr: 766414
 //
 // ======================================
 #include "box.h"
@@ -144,6 +144,8 @@ void Box::pinch(QVector3D v, float pinchPlateau)
     // Tip: Use m_overallObjectDimensions to get the extents of the x, y and z dimension
     // Tip: Keep in mind that the box is located in the coordinate system origin
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    
 
     glVertex3fv(&v[0]);
 }

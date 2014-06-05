@@ -9,16 +9,18 @@
 // Diese Datei bearbeiten.
 //
 // Bearbeiter
-// Matr.-Nr: xxxxx
-// Matr.-Nr: xxxxx
+// Matr.-Nr: 768201
+// Matr.-Nr: 766414
 //
 // ======================================
+
 #include "threedobject.h"
 
 #include <QtOpenGL>
 
 #include <algorithm>
 #include <cfloat>
+#include <iostream>
 
 ThreeDObject::ThreeDObject( bool requiresInnerRotation) :
     m_requiresInnerRotation(requiresInnerRotation),
@@ -231,23 +233,78 @@ void ThreeDObject::drawFace(float &animationFrame)
     // Translate and rotate each face along its avgNormal.
     // Take into accounte the animationFrame parameter:
     //      0.0f: No transformation at all
-    //      1.0f: Maximum rotation of 360° and maximum translation
+    //      1.0f: Maximum rotation of 360ï¿½ and maximum translation
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*
     glBegin(GL_TRIANGLES);
     {
         for (unsigned j = 0; j < m_faces.size(); ++j)
         {
             QVector3D v;
-            // ..
 
             for (unsigned i = 0; i < 3; ++i)
             {
                 glNormal3fv(&m_normals[m_faces[j].normalIndices[i]][0]);
                 v = m_vertices[m_faces[j].vertexIndices[i]];
-                // ..
+
+                v +
+
                 glVertex3fv(&v[0]);
+            }
+
+        }
+    }
+
+    glEnd();
+    */
+
+    float angle = 6.28 * animationFrame; // 2*PI
+
+    glBegin(GL_TRIANGLES);
+    {
+        for (unsigned j = 0; j < m_faces.size(); ++j)
+        {
+            QVector3D V;
+
+            QVector3D avgVertex =   m_vertices[m_faces[j].vertexIndices[0]] +
+                                    m_vertices[m_faces[j].vertexIndices[1]] +
+                                    m_vertices[m_faces[j].vertexIndices[2]];
+
+            float a = avgVertex[0],
+                b = avgVertex[1],
+                c = avgVertex[2];
+
+            float u = m_faces[j].avgNormal[0],
+                v = m_faces[j].avgNormal[1],
+                w = m_faces[j].avgNormal[2];
+
+
+            for (unsigned i = 0; i < 3; ++i)
+            {
+                glNormal3fv(&m_normals[m_faces[j].normalIndices[i]][0]);
+                V = m_vertices[m_faces[j].vertexIndices[i]];
+
+                V += (m_faces[j].avgNormal * animationFrame);
+
+                float x = V[0], y = V[1], z = V[2];
+
+                V[0] = (a*(pow(v,2)+pow(w,2)) -
+                    u*(b*v + c*w - u*x - v*y - w*z))*(1-cos(angle)) + x * cos(angle) +
+                    (-c*v + b*w - w*y + v*z) * sin(angle);
+                V[1] = (b*(pow(u,2)+pow(w,2)) -
+                    v*(a*u + c*w - u*x - v*y - w*z))*(1-cos(angle)) + y * cos(angle) +
+                    (c*u - a*w + w*x - u*z) * sin(angle);
+                V[2] = (c*(pow(u,2)+pow(v,2)) -
+                    w*(a*u + b*v - u*x - v*y - w*z))*(1-cos(angle)) + z * cos(angle) +
+                    (-b*u + a*v - v*x + u*y) * sin(angle);
+
+                //V = rotMatrix * V;
+
+                glVertex3fv(&V[0]);
             }
         }
     }
     glEnd();
+
 }
