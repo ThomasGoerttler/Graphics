@@ -17,6 +17,7 @@
 
 #include <QtOpenGL>
 #define PI 3.14159265
+#define DEGREE_TO_RAD( d ) ( d * PI / 180.0f)
 
 Box::Box(float width, int numCellsXAxis, float height, int numCellsYAxis, float depth, int numCellsZAxis)
 {
@@ -135,58 +136,48 @@ void Box::transformVertex(QVector3D v, float animationFrame)
 
 void Box::pinch(QVector3D v, float pinchPlateau)
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 16
-    // Apply a pinch deformation to the given vertex v.
-    // Take into account the pinchPlateau parameter
-    //      0.0f: No deformation at all
-    //      1.0f: Maximum deformation
-    // Tip: Use m_overallObjectDimensions to get the extents of the x, y and z dimension
-    // Tip: Keep in mind that the box is located in the coordinate system origin
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
     
-
+    float heightY = m_overallObjectDimensions.y();
+    v.setX(v.x() * ( 1.0f - (pinchPlateau * (heightY / 2 + v.y()) / heightY)));
     glVertex3fv(&v[0]);
 }
 
 void Box::mold(QVector3D v, float moldPlateau)
-{
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 16
-    // Apply a mold deformation to the given vertex v.
-    // Take into account the moldPlateau parameter
-    //      0.0f: No deformation at all
-    //      1.0f: Maximum deformation
-    // Tip: Use m_overallObjectDimensions to get the extents of the x, y and z dimension
-    // Tip: Keep in mind that the box is located in the coordinate system origin
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+{	
+	float x = fabs(v.x());
+	float z = fabs(v.z());
+	
+    float rad = 1.0f - (moldPlateau * (m_overallObjectDimensions.y() * 0.5f + (atan2(z, x)/PI))/m_overallObjectDimensions.y());
+
+    v.setX(v.x() * rad);
+    v.setZ(v.z() * rad);
 
     glVertex3fv(&v[0]);
 }
 
 void Box::twist(QVector3D v, float maxAngle)
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 16
-    // Apply a twist deformation to the given vertex v.
-    // Take into account the maxAngle parameter, that defines the maximum rotation angle
-    // Tip: Use m_overallObjectDimensions to get the extents of the x, y and z dimension
-    // Tip: Keep in mind that the box is located in the coordinate system origin
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    float rad = - (m_overallObjectDimensions.y() / 2 + v.y())/m_overallObjectDimensions.y() * DEGREE_TO_RAD(maxAngle);
+
+    float x = (cos(rad) * v.x()) - (sin(rad) * v.z());
+    float y = (sin(rad) * v.x()) + (cos(rad) * v.z());
+
+    v.setX(x);
+    v.setZ(y);
+    v.setY(v.y());
 
     glVertex3fv(&v[0]);
 }
 
 void Box::bend(QVector3D v, float maxAngle)
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 16
-    // Apply a bend deformation to the given vertex v.
-    // Take into account the maxAngle parameter, that defines the maximum rotation angle
-    // Tip: Use m_overallObjectDimensions to get the extents of the x, y and z dimension
-    // Tip: Keep in mind that the box is located in the coordinate system origin
-    /////////////////////////////////////////////////////////////////////////////////////////////////
+    float heightY = m_overallObjectDimensions.y();
+    float rad = (heightY / 2 + v.y()) / heightY * DEGREE_TO_RAD(maxAngle);
+    float y = v.y();
 
+    v.setY(cos(rad) * v.y() - sin(rad) * v.x());
+    v.setX(sin(rad) * y + cos(rad) * v.x());
+	
     glVertex3fv(&v[0]);
 }
