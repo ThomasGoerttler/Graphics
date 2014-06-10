@@ -18,6 +18,7 @@
 #include <QtOpenGL>
 #define PI 3.14159265
 #define DEGREE_TO_RAD( d ) ( d * PI / 180.0f)
+#define INVERT( v ) ( 1.0 - v)
 
 Box::Box(float width, int numCellsXAxis, float height, int numCellsYAxis, float depth, int numCellsZAxis)
 {
@@ -138,7 +139,7 @@ void Box::pinch(QVector3D v, float pinchPlateau)
 {
     
     float heightY = m_overallObjectDimensions.y();
-    v.setX(v.x() * ( 1.0f - (pinchPlateau * (heightY / 2 + v.y()) / heightY)));
+    v.setX(v.x() * ( 1.0 - (pinchPlateau * (heightY / 2 + v.y()) / heightY)));
     glVertex3fv(&v[0]);
 }
 
@@ -147,7 +148,8 @@ void Box::mold(QVector3D v, float moldPlateau)
 	float x = fabs(v.x());
 	float z = fabs(v.z());
 	
-    float rad = 1.0f - (moldPlateau * (m_overallObjectDimensions.y() * 0.5f + (atan2(z, x)/PI))/m_overallObjectDimensions.y());
+	
+    float rad = INVERT(moldPlateau * (m_overallObjectDimensions.y() / 2 +((sqrt(x) * sqrt(z)) + atan2(180, 180) / PI) )/m_overallObjectDimensions.y());
 
     v.setX(v.x() * rad);
     v.setZ(v.z() * rad);
