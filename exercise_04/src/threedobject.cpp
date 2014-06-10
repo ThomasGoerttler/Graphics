@@ -165,39 +165,39 @@ bool ThreeDObject::loadOBJ(const char *path)
 
 void ThreeDObject::drawHaloedLines(float animationFrame)
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 17
-    // Draw the given geometry (see m_faces) as haloed lines.
-    // Use a line width of 16.0f*animationFrame for the first and a line width of 2.0f for the second pass.
-    // Tip: Use glDepthFunc(), glColorMask(), glLineWidth()
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    glEnable(GL_COLOR_MATERIAL);
+     glEnable(GL_COLOR_MATERIAL);
 
-    // ..
+	glLineWidth(16.0f * animationFrame);
+	glDepthFunc(GL_ALWAYS);
+	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+	glBegin(GL_LINES); 
+	{
+		for (unsigned j = 0; j < m_faces.size(); ++j) {
+            for (unsigned i = 0; i < 3; ++i)
+            {
+                glNormal3fv(&m_normals[m_faces[j].normalIndices[i]][0]);
+                v = m_vertices[m_faces[j].vertexIndices[i]];
+                glVertex3fv(&v[0]);
+            }
+		}
+	}
+	glEnd();
 
-    // pass 1
-//    glLineWidth(..);
-//    glBegin(..);
-//    {
-//        for (unsigned j = 0; j < m_faces.size(); ++j)
-//        {
-            // ..
-//        }
-//    }
-//    glEnd();
-
-    // ..
-
-    // pass 2
-//    glLineWidth(..);
-//    glBegin(..);
-//    {
-//        for (unsigned j = 0; j < m_faces.size(); ++j)
-//        {
-            // ..
-//        }
-//    }
-//    glEnd();
+	glLineWidth(2.0f);
+	glDepthFunc(GL_LEQUAL);
+	glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+	glBegin(GL_LINES);
+	{
+		for (unsigned j = 0; j < m_faces.size(); ++j) {
+            for (unsigned i = 0; i < 3; ++i)
+            {
+                glNormal3fv(&m_normals[m_faces[j].normalIndices[i]][0]);
+                v = m_vertices[m_faces[j].vertexIndices[i]];
+                glVertex3fv(&v[0]);
+            }
+		}
+	}
+	glEnd();
 }
 
 void ThreeDObject::draw(float animationFrame)
