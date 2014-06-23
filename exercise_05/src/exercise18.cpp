@@ -173,13 +173,15 @@ void Exercise18::drawFaceNormals()
 	glDisable(GL_LIGHTING);
 	glBegin(GL_LINES);
 
-    glColor3f(1.f, 0.f, 1.f);
+    glColor3f(1.0f, 0.0f, 1.0f);
 
     HalfEdgeStructure::t_faces::const_iterator i = m_he->faces().begin();
     const HalfEdgeStructure::t_faces::const_iterator iEnd = m_he->faces().end();
     for(; i != iEnd; ++i)
     {
-        //TODO
+		QVector3D middleVector = (*(i->he->vertex) + *(i->he->next->vertex) + *(i->he->prev->vertex))/3.0;
+		glVertex3f(middleVector.x(), middleVector.y(), middleVector.z());
+		glVertex3f(middleVector.x() + i->normal.y() * 0.1, middleVector.y() + i->normal.y() * 0.1, middleVector.z() + i->normal.z() * 0.1);
     }
 
     glEnd();
@@ -200,7 +202,11 @@ void Exercise18::drawVertexNormals()
     const HalfEdgeStructure::t_halfEdges::const_iterator iEnd = m_he->halfEdges().end();
     for(; i != iEnd; ++i)
     {
-        //TODO
+		QVector3D v = i->vertex[0];
+		QVector3D n = i->normal * 0.1;
+		glVertex3f(v.x(), v.y(), v.z());
+		v += n ;
+		glVertex3f(v.x(), v.y(), v.z());
     }
 
     glEnd();
