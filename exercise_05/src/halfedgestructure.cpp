@@ -110,28 +110,27 @@ void HalfEdgeStructure::calculatePerFaceNormals()
 void HalfEdgeStructure::calculatePerVertexNormals(const float threshold)
 {
     const int size(static_cast<int>(m_halfEdges.size()));
-    qDebug() << threshold;
 	
 	for(int i = 0; i < size; ++i)
 	{
-	int nFaces = 1;
+	int counterFaces = 1;
 	QVector3D vectorNormal = m_halfEdges[i].face->normal;
-	HalfEdge * he = NULL;
+	HalfEdge * oldHalfEdge = NULL;
 	
 	if(m_halfEdges[i].opp != NULL && m_halfEdges[i].opp->next != NULL){
 		HalfEdge *halfEdgeTemp = m_halfEdges[i].opp->next;
 		QVector3D newVector = vectorNormal;
-		while (halfEdgeTemp != &m_halfEdges[i]  && he == NULL) {
+		while (halfEdgeTemp != &m_halfEdges[i]  && oldHalfEdge == NULL) {
 			if(_acosd(QVector3D::dotProduct(vectorNormal, halfEdgeTemp->face->normal)) < threshold)
-				newVector = (newVector * (nFaces++) + halfEdgeTemp->face->normal) / nFaces;
+				newVector = (newVector * (counterFaces++) + halfEdgeTemp->face->normal) / counterFaces;
 			if (halfEdgeTemp -> opp != NULL)
 				halfEdgeTemp = halfEdgeTemp->opp->next;
-			he = halfEdgeTemp;
+			oldHalfEdge = halfEdgeTemp;
 		}
 		halfEdgeTemp = m_halfEdges[i].prev->opp;
-		while (halfEdgeTemp != NULL && he != NULL && halfEdgeTemp != he) {
+		while (halfEdgeTemp != NULL && oldHalfEdge != NULL && halfEdgeTemp != oldHalfEdge) {
 			if(_acosd(QVector3D::dotProduct(vectorNormal, halfEdgeTemp->face->normal)) < threshold){
-				newVector = (newVector * (nFaces++) + halfEdgeTemp->face->normal) / nFaces;
+				newVector = (newVector * (counterFaces++) + halfEdgeTemp->face->normal) / counterFaces;
 			}
 			if (halfEdgeTemp -> prev -> opp != NULL) {
 				halfEdgeTemp = halfEdgeTemp->prev->opp;
