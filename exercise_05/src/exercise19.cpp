@@ -146,8 +146,8 @@ void Exercise19::tesselatePolygons()
             continue;
 		
 		gluTessBeginContour(tesselator);
-		for (Contour::iterator contuorIterator = contour.begin(); contuorIterator != contour.end(); ++contuorIterator)
-			gluTessVertex(tesselator, &(contuorIterator->x), &(contuorIterator->x));
+		for (Contour::iterator contourIterator = contour.begin(); contourIterator != contour.end(); ++contourIterator)
+			gluTessVertex(tesselator, &(contourIterator->x), &(contourIterator->x));
 		
 		gluTessEndContour(tesselator);
 	}
