@@ -89,21 +89,17 @@ void Exercise21::initializeGL()
 
    glEnable(GL_SMOOTH);
    glClearColor (0.0, 0.0, 0.0, 0.0);
-
-   /////////////////////////////////////////////////////////////////////////////////////////////////
-   // TODO: Aufgabe 21
-   // Initialize a two-dimensional opengl evaluator.
-   // Make sure that if m_gridSize changes, the evaluator still works
-   /////////////////////////////////////////////////////////////////////////////////////////////////
-
-//   glMap2f();
-//   glEnable(GL_MAP2_VERTEX_3);
-//   glMapGrid2f();
+  
+ 	glMap2f(GL_MAP2_VERTEX_3, 0,1, 3, qSqrt(m_gridSize), 0,1, 3*qSqrt(m_gridSize) ,qSqrt(m_gridSize), (GLfloat *) m_heightField);
+	glEnable(GL_MAP2_VERTEX_3);
+	glMapGrid2f(qSqrt(m_gridSize), 0.0, 1.0, qSqrt(m_gridSize), 0.0, 1.0);
 
    glEnable(GL_AUTO_NORMAL);
    glEnable(GL_NORMALIZE);
    glEnable(GL_DEPTH_TEST);
    glDisable(GL_LIGHTING);
+   
+   
 }
 
 void Exercise21::calculateHeightField()
@@ -179,11 +175,8 @@ void Exercise21::drawHeightFieldPoints()
     {
         for (int j = 0; j < sqrtGridSize; j++)
         {
-            /////////////////////////////////////////////////////////////////////////////////////////////////
-            // TODO: Aufgabe 21
-            // Visualize the height field using GL_POINTS.
-            /////////////////////////////////////////////////////////////////////////////////////////////////
-        }
+        	glVertex3f(m_heightField [i][j][0], m_heightField [i][j][1], m_heightField [i][j][2]);
+		}
     }
     glEnd();
     glPopMatrix();
@@ -197,12 +190,15 @@ void Exercise21::drawHeightFieldLines()
     glColor3f(1.f, 1.f, 0.f);
     int sqrtGridSize = qSqrt(m_gridSize);
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 21
-    // Visualize the height field using GL_LINES.
-    // Make sure that if m_gridSize changes, the rendering results are still correct.
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
+	for (int i = 0; i < sqrtGridSize; i++)
+	{
+		for (int j = 0; j < sqrtGridSize; j++)
+	 	{
+        	glVertex3f(m_heightField [i][j][0], m_heightField [i][j][1], m_heightField [i][j][2]);
+        	glVertex3f(m_heightField [i][j][0], 0, m_heightField [i][j][2]);
+		}
+	}
+    
     glEnd();
     glPopMatrix();
 }
@@ -214,15 +210,24 @@ void Exercise21::drawTriangulatedHeightField()
     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 
     glColor3f(1.f, 1.f, 1.f);
-
+	glBegin(GL_TRIANGLE_STRIP);
     int sqrtGridSize = qSqrt(m_gridSize);
+	GLboolean thisDirection = true;
+	
+    for (int i = 0; i < sqrtGridSize; i++)
+       {
+           for (int j = 0; j < sqrtGridSize; j++)
+           {
+               int j_modified = (!thisDirection) ? (sqrtGridSize-1) - j : j;
+               glVertex3f(m_heightField [i][j_modified][0], m_heightField [i][j_modified][1], m_heightField [i][j_modified][2]);
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 21
-    // Triangulate the given height field. Use GL_TRIANGLE_STRIPS.
-    // Make sure that if m_gridSize changes, the triangulation still works.
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
+               int i_Modified = (i+1 < sqrtGridSize) ? i+1 : i;
+               glVertex3f(m_heightField [i_Modified] [j_modified] [0], m_heightField [i_Modified] [j_modified] [1], m_heightField [i_Modified] [j_modified] [2]);
+               
+           }
+           thisDirection = !thisDirection;
+       }
+       glEnd();
 
     glPopMatrix();
     glEnable(GL_CULL_FACE);
@@ -248,12 +253,8 @@ void Exercise21::drawHeightFieldBezierPatch()
     glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
     glColor3f(1.f, 1.f, 1.f);
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: Aufgabe 21
-    // Draw a *filled* bezier patch using the opengl evaluator
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    //glEvalMesh2();
-
+	glEvalMesh2(GL_FILL, 0.0,  qSqrt(m_gridSize), 0.0,  qSqrt(m_gridSize));
+  
     glPopMatrix ();
     glDisable(GL_LIGHTING);
 }
