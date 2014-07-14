@@ -30,7 +30,7 @@ void main()
 	
 	float PI = 3.14159;
     vec3 ligthVector = vec3(light_pos[0] - N.x, light_pos[1] - N.y, light_pos[2] - N.z);
-	intensity = 1 - acos((ligthVector[0]*normN.x + ligthVector[1] * normN.y + ligthVector[2] * normN.z)/(sqrt(ligthVector[0] * ligthVector[0] + ligthVector[1] * ligthVector[1] + ligthVector[2] * ligthVector[2]) * sqrt(normN.x * normN.x + normN.y * normN.y + normN.z * normN.z))) / PI;
+	intensity = 1 - acos((ligthVector[0]*normN.x + ligthVector[1] * normN.y + ligthVector[2] * normN.z)/(sqrt(pow(ligthVector[0],2) + pow(ligthVector[1],2) + pow(ligthVector[2],2)) * sqrt(pow(normN.x,2) + pow(normN.y,2) + pow(normN.z,2)))) / PI;
 	
 	if(intensity < 0) intensity = intensity * -1;
 	if(intensity < 0.01)
