@@ -9,8 +9,8 @@
 // Diese Datei bearbeiten.
 //
 // Bearbeiter
-// Matr.-Nr: xxxxx
-// Matr.-Nr: xxxxx
+// Matr.-Nr: 768201
+// Matr.-Nr: 766414
 //
 // ======================================
 
@@ -85,21 +85,20 @@ void Exercise21::initBezierLightingAndMaterial()
 
 void Exercise21::initializeGL()
 {
-   AbstractGLExercise::initializeGL();
+    AbstractGLExercise::initializeGL();
 
-   glEnable(GL_SMOOTH);
-   glClearColor (0.0, 0.0, 0.0, 0.0);
-  
- 	glMap2f(GL_MAP2_VERTEX_3, 0,1, 3, qSqrt(m_gridSize), 0,1, 3*qSqrt(m_gridSize) ,qSqrt(m_gridSize), (GLfloat *) m_heightField);
-	glEnable(GL_MAP2_VERTEX_3);
-	glMapGrid2f(qSqrt(m_gridSize), 0.0, 1.0, qSqrt(m_gridSize), 0.0, 1.0);
+    glEnable(GL_SMOOTH);
+    glClearColor (0.0, 0.0, 0.0, 0.0);
 
-   glEnable(GL_AUTO_NORMAL);
-   glEnable(GL_NORMALIZE);
-   glEnable(GL_DEPTH_TEST);
-   glDisable(GL_LIGHTING);
-   
-   
+    glMap2f(GL_MAP2_VERTEX_3, 0, 1, 3, qSqrt(m_gridSize), 0, 1,
+        3 * qSqrt(m_gridSize), qSqrt(m_gridSize), (GLfloat *) m_heightField);
+    glEnable(GL_MAP2_VERTEX_3);
+    glMapGrid2f(qSqrt(m_gridSize), 0.0, 1.0, qSqrt(m_gridSize), 0.0, 1.0);
+
+    glEnable(GL_AUTO_NORMAL);
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_LIGHTING);  
 }
 
 void Exercise21::calculateHeightField()
@@ -175,8 +174,12 @@ void Exercise21::drawHeightFieldPoints()
     {
         for (int j = 0; j < sqrtGridSize; j++)
         {
-        	glVertex3f(m_heightField [i][j][0], m_heightField [i][j][1], m_heightField [i][j][2]);
-		}
+            glVertex3f(
+                m_heightField [i][j][0],
+                m_heightField [i][j][1],
+                m_heightField [i][j][2]
+            );
+        }
     }
     glEnd();
     glPopMatrix();
@@ -190,14 +193,22 @@ void Exercise21::drawHeightFieldLines()
     glColor3f(1.f, 1.f, 0.f);
     int sqrtGridSize = qSqrt(m_gridSize);
 
-	for (int i = 0; i < sqrtGridSize; i++)
-	{
-		for (int j = 0; j < sqrtGridSize; j++)
-	 	{
-        	glVertex3f(m_heightField [i][j][0], m_heightField [i][j][1], m_heightField [i][j][2]);
-        	glVertex3f(m_heightField [i][j][0], 0, m_heightField [i][j][2]);
-		}
-	}
+    for (int i = 0; i < sqrtGridSize; i++)
+    {
+        for (int j = 0; j < sqrtGridSize; j++)
+        {
+            glVertex3f(
+                m_heightField [i][j][0],
+                m_heightField [i][j][1],
+                m_heightField [i][j][2]
+            );
+            glVertex3f(
+                m_heightField [i][j][0],
+                0,
+                m_heightField [i][j][2]
+            );
+        }
+    }
     
     glEnd();
     glPopMatrix();
@@ -215,19 +226,26 @@ void Exercise21::drawTriangulatedHeightField()
 	GLboolean thisDirection = true;
 	
     for (int i = 0; i < sqrtGridSize; i++)
-       {
-           for (int j = 0; j < sqrtGridSize; j++)
-           {
-               int j_modified = (!thisDirection) ? (sqrtGridSize-1) - j : j;
-               glVertex3f(m_heightField [i][j_modified][0], m_heightField [i][j_modified][1], m_heightField [i][j_modified][2]);
+    {
+        for (int j = 0; j < sqrtGridSize; j++)
+        {
+            int j_modified = thisDirection ? j : (sqrtGridSize - 1) - j;
+            glVertex3f(
+                m_heightField [i] [j_modified] [0],
+                m_heightField [i] [j_modified] [1],
+                m_heightField [i] [j_modified] [2]
+            );
 
-               int i_Modified = (i+1 < sqrtGridSize) ? i+1 : i;
-               glVertex3f(m_heightField [i_Modified] [j_modified] [0], m_heightField [i_Modified] [j_modified] [1], m_heightField [i_Modified] [j_modified] [2]);
-               
-           }
-           thisDirection = !thisDirection;
-       }
-       glEnd();
+            int i_Modified = (i + 1 < sqrtGridSize) ? (i + 1) : i;
+            glVertex3f(
+                m_heightField [i_Modified] [j_modified] [0],
+                m_heightField [i_Modified] [j_modified] [1],
+                m_heightField [i_Modified] [j_modified] [2]
+            );
+        }
+        thisDirection = !thisDirection;
+    }
+    glEnd();
 
     glPopMatrix();
     glEnable(GL_CULL_FACE);
@@ -261,7 +279,12 @@ void Exercise21::drawHeightFieldBezierPatch()
 
 const QString Exercise21::hints() const
 {
-    return "[P] : toggle points. [L] : toggle lines. [T] : toggle triangulation. [B] : toggle bezier patch. [Space] : toggle rotation.";
+    return
+        "[P] : toggle points. "
+        "[L] : toggle lines. "
+        "[T] : toggle triangulation. "
+        "[B] : toggle bezier patch. "
+        "[Space] : toggle rotation.";
 }
 
 void Exercise21::keyPressEvent(QKeyEvent* keyEvent)
